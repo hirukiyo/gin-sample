@@ -1,4 +1,4 @@
-package api_server
+package app
 
 import (
 	"github.com/joho/godotenv"

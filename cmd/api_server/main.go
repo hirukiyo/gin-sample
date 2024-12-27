@@ -5,11 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"ginapp/infra/api_server"
+	"ginapp/internal/app"
 )
 
 func main() {
-	env, _ := api_server.LoadEnvironmentFromDotenv()
+	env, _ := app.LoadEnvironmentFromDotenv()
 	r := gin.Default()
 	fmt.Println(env.AppName)
 	r.GET("/ping", func(c *gin.Context) {
