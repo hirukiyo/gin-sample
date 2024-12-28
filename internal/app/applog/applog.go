@@ -2,10 +2,46 @@ package applog
 
 import (
 	"context"
+	"ginapp/internal/app"
 	"log/slog"
+	"os"
 	"runtime"
+	"strings"
 	"time"
+
+	"github.com/MatusOllah/slogcolor"
+	"github.com/gin-gonic/gin"
 )
+
+func SetLogger(cfg *app.AppEnvironment) {
+	var h slog.Handler
+	logLevel := AppLogLevel(cfg)
+	if cfg.AppMode == gin.ReleaseMode {
+		h = slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{AddSource: true, Level: logLevel})
+	} else {
+		h = slogcolor.NewHandler(os.Stdout, &slogcolor.Options{
+			Level:       logLevel,
+			TimeFormat:  time.RFC3339,
+			SrcFileMode: slogcolor.ShortFile,
+		})
+	}
+	slog.SetDefault(slog.New(h))
+}
+
+func AppLogLevel(cfg *app.AppEnvironment) slog.Level {
+	appLogLevel := slog.LevelInfo
+	switch strings.ToLower(cfg.AppLogLevel) {
+	case "debug":
+		appLogLevel = slog.LevelDebug
+	case "info":
+		appLogLevel = slog.LevelInfo
+	case "warn":
+		appLogLevel = slog.LevelWarn
+	case "error":
+		appLogLevel = slog.LevelError
+	}
+	return appLogLevel
+}
 
 func Debug(ctx context.Context, msg string, args ...any) {
 	log(ctx, slog.LevelDebug, msg, args...)
