@@ -16,6 +16,14 @@ type AppEnvironment struct {
 	AppTest     string `envconfig:"APP_TEST"`
 }
 
+func (e *AppEnvironment) ginMode(m string) string {
+	// 値補正
+	if m != gin.DebugMode && m != gin.ReleaseMode {
+		m = gin.DebugMode
+	}
+	return m
+}
+
 func LoadEnvironment() (*AppEnvironment, error) {
 	var env AppEnvironment
 	err := envconfig.Process("", &env)
@@ -24,7 +32,7 @@ func LoadEnvironment() (*AppEnvironment, error) {
 	}
 
 	// 値補正
-	env.AppMode = ginMode(env.AppMode)
+	env.AppMode = env.ginMode(env.AppMode)
 
 	return &env, nil
 }
@@ -39,12 +47,4 @@ func LoadEnvironmentFromDotenv() (*AppEnvironment, error) {
 
 func LoadDotEnv() error {
 	return godotenv.Load()
-}
-
-func ginMode(m string) string {
-	// 値補正
-	if m != gin.DebugMode && m != gin.ReleaseMode {
-		m = gin.DebugMode
-	}
-	return m
 }
