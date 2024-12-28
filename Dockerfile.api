@@ -1,0 +1,20 @@
+FROM golang:1.23
+
+WORKDIR /app
+COPY go.mod ./
+COPY go.sum ./
+
+RUN apt update && apt -y upgrade
+RUN export PATH=$PATH:$(go env GOPATH)/bin
+
+# install go mod
+RUN go mod download
+
+# install air
+RUN curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+
+# install wire
+RUN go install github.com/google/wire/cmd/wire@latest
+
+# execute air
+CMD ["air", "-c", ".air.toml"]

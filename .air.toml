@@ -7,7 +7,7 @@ tmp_dir = "tmp"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "go build -o ./tmp/api_server ginapp/cmd/api_server"
+cmd = "go build --buildvcs=false -o ./tmp/api_server ginapp/cmd/api_server"
 # Binary file yields from `cmd`.
 bin = "tmp/api_server"
 # Customize binary, can setup environment variables when run your app.
