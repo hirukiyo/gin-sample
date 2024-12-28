@@ -10,7 +10,6 @@ import (
 
 	"ginapp/internal/app"
 	"ginapp/internal/app/applog"
-	"ginapp/internal/handlers"
 )
 
 type App struct {
@@ -36,19 +35,8 @@ func main() {
 	slog.Info("app start.", "env", app.cfg)
 	applog.Info(context.Background(), "app end.", "env", app.cfg)
 
-	registRoute(app)
+	RegistRouteHandler(app)
 
 	app.gin.Run(fmt.Sprintf("%s:%d", app.cfg.AppHost, app.cfg.AppPort))
 
-}
-
-func registRoute(app *App) {
-	app.gin.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-
-	api := app.gin.Group("/api")
-	api.GET("/hello", handlers.Hello())
 }
