@@ -35,7 +35,7 @@ func main() {
 	slog.Info("app start.", "env", app.cfg)
 	applog.Info(context.Background(), "app end.", "env", app.cfg)
 
-	RegistRouteHandler(app)
+	RegisterRouteHandler(app)
 
 	if err := app.gin.Run(fmt.Sprintf("%s:%d", app.cfg.AppHost, app.cfg.AppPort)); err != nil {
 		slog.Error("server run error.", "err", err)
