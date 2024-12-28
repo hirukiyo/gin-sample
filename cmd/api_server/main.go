@@ -10,6 +10,7 @@ import (
 
 	"ginapp/internal/app"
 	"ginapp/internal/app/applog"
+	"ginapp/internal/handlers"
 )
 
 type App struct {
@@ -49,9 +50,5 @@ func registRoute(app *App) {
 	})
 
 	api := app.gin.Group("/api")
-	api.GET("/hello", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "hello",
-		})
-	})
+	api.GET("/hello", handlers.Hello())
 }
