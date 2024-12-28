@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"ginapp/internal/app"
+	"ginapp/internal/app/applog"
 )
 
 type App struct {
@@ -34,6 +36,7 @@ func main() {
 	}
 
 	slog.Info("app start.", "env", app.cfg)
+	applog.Info(context.Background(), "app end.", "env", app.cfg)
 
 	app.gin.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -42,6 +45,7 @@ func main() {
 	})
 
 	app.gin.Run(fmt.Sprintf("%s:%d", app.cfg.AppHost, app.cfg.AppPort))
+
 }
 
 func setLogger(cfg *app.AppEnvironment) {
