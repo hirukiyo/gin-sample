@@ -37,6 +37,8 @@ func main() {
 
 	RegistRouteHandler(app)
 
-	app.gin.Run(fmt.Sprintf("%s:%d", app.cfg.AppHost, app.cfg.AppPort))
-
+	if err := app.gin.Run(fmt.Sprintf("%s:%d", app.cfg.AppHost, app.cfg.AppPort)); err != nil {
+		slog.Error("server run error.", "err", err)
+		os.Exit(1)
+	}
 }
