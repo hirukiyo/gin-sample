@@ -5,7 +5,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-type Environment struct {
+type AppEnvironment struct {
 	AppName    string `envconfig:"APP_NAME"`
 	AppHost    string `envconfig:"APP_HOST"`
 	AppPort    int    `envconfig:"APP_PORT"`
@@ -13,8 +13,8 @@ type Environment struct {
 	AppMode    string `envconfig:"APP_MODE"`
 }
 
-func LoadEnvironment() (*Environment, error) {
-	var env Environment
+func LoadEnvironment() (*AppEnvironment, error) {
+	var env AppEnvironment
 	err := envconfig.Process("", &env)
 	if err != nil {
 		return nil, err
@@ -22,10 +22,14 @@ func LoadEnvironment() (*Environment, error) {
 	return &env, nil
 }
 
-func LoadEnvironmentFromDotenv() (*Environment, error) {
-	err := godotenv.Load()
+func LoadEnvironmentFromDotenv() (*AppEnvironment, error) {
+	err := LoadDotEnv()
 	if err != nil {
 		return nil, err
 	}
 	return LoadEnvironment()
+}
+
+func LoadDotEnv() error {
+	return godotenv.Load()
 }
