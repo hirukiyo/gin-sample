@@ -1,10 +1,6 @@
 package app
 
 import (
-	"fmt"
-	"log/slog"
-	"strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
@@ -28,10 +24,7 @@ func LoadEnvironment() (*AppEnvironment, error) {
 	}
 
 	// 値補正
-	fmt.Println("@@@@", env.AppMode)
 	env.AppMode = ginMode(env.AppMode)
-	fmt.Println("####", env.AppMode)
-	env.AppLogLevel = logLevel(env.AppLogLevel)
 
 	return &env, nil
 }
@@ -54,19 +47,4 @@ func ginMode(m string) string {
 		m = gin.DebugMode
 	}
 	return m
-}
-
-func logLevel(l string) string {
-	appLogLevel := slog.LevelInfo
-	switch strings.ToLower(l) {
-	case "debug":
-		appLogLevel = slog.LevelDebug
-	case "info":
-		appLogLevel = slog.LevelInfo
-	case "warn":
-		appLogLevel = slog.LevelWarn
-	case "error":
-		appLogLevel = slog.LevelError
-	}
-	return appLogLevel.String()
 }
