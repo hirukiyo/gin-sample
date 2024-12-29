@@ -34,6 +34,11 @@ make migrate-create create_accounts
 /migrations/20241229091950_create_accounts.up.sql
 /migrations/20241229091950_create_accounts.down.sql
 ```
+* 生成されたファイルの所有者がrootになる場合(linux環境で発生)はchownコマンドで所有者を変更
+```
+ls -la database/migrations
+sudo chown [your user]:[your group] -R database/migrations/
+```
 
 ## マイグレーション適用
 * コマンド
