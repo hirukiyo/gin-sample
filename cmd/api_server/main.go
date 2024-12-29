@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"io"
 	"log/slog"
@@ -13,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 
+	"ginapp/database/mysql"
 	"ginapp/internal/app"
 	"ginapp/internal/app/applog"
 )
@@ -26,20 +26,39 @@ func main() {
 
 	applog.SetLogger(env)
 	gin.SetMode(env.AppMode)
-
-	app := &app.App{
-		Env:    env,
-		Engine: gin.Default(),
-	}
+	engine := gin.Default()
 
 	// middleware
 	{
-		app.Engine.Use(gin.Recovery())
-		app.Engine.Use(RequestLoggerMiddleware())
+		engine.Use(gin.Recovery())
+		engine.Use(RequestLoggerMiddleware())
+	}
+
+	// setup
+	mysqlConn, err := mysql.NewConnection(
+		env.MysqlUser,
+		env.MysqlPassword,
+		env.MysqlHost,
+		env.MysqlPort,
+		env.MysqlDatabase,
+		env.MysqlLogLevel,
+		env.MysqlMaxIdleConns,
+		env.MysqlMaxOpenConns,
+		env.MysqlConnectionMaxLifetime,
+	)
+	if err != nil {
+		slog.Error("mysql connection error.", "err", err)
+		os.Exit(1)
+	}
+
+	// create app
+	app := &app.App{
+		Env:    env,
+		Engine: engine,
+		Mysql:  mysqlConn,
 	}
 
 	slog.Info("app start.", "env", app.Env)
-	applog.Info(context.Background(), "app end.", "env", app.Env)
 
 	RegisterRouteHandler(app)
 

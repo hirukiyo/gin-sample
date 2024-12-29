@@ -1,6 +1,8 @@
 package app
 
 import (
+	"ginapp/database/mysql"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
@@ -9,6 +11,7 @@ import (
 type App struct {
 	Env    *AppEnvironment
 	Engine *gin.Engine
+	Mysql  *mysql.Connection
 }
 
 // Environment
