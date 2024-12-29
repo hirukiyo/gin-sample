@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"log/slog"
+	"net/http"
 	"os"
 	"time"
 
@@ -55,6 +58,13 @@ func RequestLoggerMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := xid.New().String()
 
+		// extracting request body
+		body := []byte{}
+		if c.Request.Method == http.MethodPost || c.Request.Method == http.MethodPut || c.Request.Method == http.MethodPatch {
+			body, _ = io.ReadAll(c.Request.Body)
+			c.Request.Body = io.NopCloser(bytes.NewReader(body))
+		}
+
 		applog.Info(c, "REQ",
 			"id", id,
 			"method", c.Request.Method,
@@ -66,6 +76,7 @@ func RequestLoggerMiddleware() gin.HandlerFunc {
 			"host", c.Request.Host,
 			"user_agent", c.GetHeader("User-Agent"),
 			"referer", c.GetHeader("Referer"),
+			"body", string(body),
 		)
 
 		startTime := time.Now()
