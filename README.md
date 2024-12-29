@@ -37,7 +37,7 @@ make migrate-create create_accounts
 * 生成されたファイルの所有者がrootになる場合(linux環境で発生)はchownコマンドで所有者を変更
 ```
 ls -la database/migrations
-sudo chown [your user]:[your group] -R database/migrations/
+sudo chown [your user]:[your group] -R database/migrations
 ```
 
 ## マイグレーション適用
@@ -46,3 +46,18 @@ sudo chown [your user]:[your group] -R database/migrations/
 make migrate-up
 ```
 
+# Generate model
+* コマンド
+```
+make generate-model
+```
+* 実行すると database/models に ファイルが生成される
+```
+database/models/accounts.gen.go
+database/models/schema_migrations.gen.go
+```
+* 生成されたファイルの所有者がrootになる場合(linux環境で発生)はchownコマンドで所有者を変更
+```
+ls -la database/migrations
+sudo chown [your user]:[your group] -R database/models
+```

@@ -16,5 +16,8 @@ RUN curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh
 # install wire
 RUN go install github.com/google/wire/cmd/wire@latest
 
+# install gorm gen tool
+RUN go install gorm.io/gen/tools/gentool@latest
+
 # execute air
 CMD ["air", "-c", ".air.toml"]
