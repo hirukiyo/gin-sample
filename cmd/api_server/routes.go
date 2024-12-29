@@ -17,4 +17,6 @@ func RegisterRouteHandler(app *app.App) {
 
 	api := app.Engine.Group("/api")
 	api.GET("/hello", handlers.Hello())
+
+	api.POST("/account", handlers.PostAccount(app.Mysql))
 }
