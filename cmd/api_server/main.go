@@ -17,11 +17,6 @@ import (
 	"ginapp/internal/app/applog"
 )
 
-type App struct {
-	cfg *app.AppEnvironment
-	gin *gin.Engine
-}
-
 func main() {
 	env, err := app.LoadEnvironmentFromDotenv()
 	if err != nil {
@@ -32,23 +27,23 @@ func main() {
 	applog.SetLogger(env)
 	gin.SetMode(env.AppMode)
 
-	app := &App{
-		cfg: env,
-		gin: gin.Default(),
+	app := &app.App{
+		Env:    env,
+		Engine: gin.Default(),
 	}
 
 	// middleware
 	{
-		app.gin.Use(gin.Recovery())
-		app.gin.Use(RequestLoggerMiddleware())
+		app.Engine.Use(gin.Recovery())
+		app.Engine.Use(RequestLoggerMiddleware())
 	}
 
-	slog.Info("app start.", "env", app.cfg)
-	applog.Info(context.Background(), "app end.", "env", app.cfg)
+	slog.Info("app start.", "env", app.Env)
+	applog.Info(context.Background(), "app end.", "env", app.Env)
 
 	RegisterRouteHandler(app)
 
-	if err := app.gin.Run(fmt.Sprintf("%s:%d", app.cfg.AppHost, app.cfg.AppPort)); err != nil {
+	if err := app.Engine.Run(fmt.Sprintf("%s:%d", app.Env.AppHost, app.Env.AppPort)); err != nil {
 		slog.Error("server run error.", "err", err)
 		os.Exit(1)
 	}
