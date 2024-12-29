@@ -20,6 +20,7 @@ services:
       - mysql-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
       MYSQL_DATABASE: mydb
 volumes:
   mysql-data:
