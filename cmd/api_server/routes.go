@@ -1,9 +1,9 @@
 package main
 
 import (
-	"ginapp/internal/handlers"
-
 	"github.com/gin-gonic/gin"
+
+	"ginapp/internal/handlers"
 )
 
 // RegisterRouteHandler is a function to register route handler
