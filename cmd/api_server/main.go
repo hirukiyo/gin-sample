@@ -15,6 +15,7 @@ import (
 	"ginapp/database/mysql"
 	"ginapp/internal/app"
 	"ginapp/internal/app/applog"
+	"ginapp/internal/handlers"
 )
 
 func main() {
@@ -60,7 +61,7 @@ func main() {
 
 	slog.Info("app start.", "env", app.Env)
 
-	RegisterRouteHandler(app)
+	handlers.RegisterRouteHandler(app)
 
 	if err := app.Engine.Run(fmt.Sprintf("%s:%d", app.Env.AppHost, app.Env.AppPort)); err != nil {
 		slog.Error("server run error.", "err", err)
