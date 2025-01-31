@@ -2,15 +2,18 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
+	"github.com/samber/lo"
 
 	"ginapp/database/mysql"
 	"ginapp/internal/app"
@@ -104,5 +107,62 @@ func RequestLoggerMiddleware() gin.HandlerFunc {
 			"size", c.Writer.Size(),
 			"latency", slog.AnyValue(latency),
 		)
+	}
+}
+
+// Middleware to log requests
+func LoggingMiddleware(maskKeys []string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var requestBody interface{}
+		bodyBytes, _ := io.ReadAll(c.Request.Body)
+		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // Restore the body for the handler
+
+		contentType := c.GetHeader("Content-Type")
+		if strings.Contains(contentType, "application/json") {
+			if err := json.Unmarshal(bodyBytes, &requestBody); err == nil {
+				requestBody = maskAndTruncateJSON(requestBody, maskKeys)
+			} else {
+				requestBody = string(bodyBytes)
+			}
+		} else {
+			requestBody = string(bodyBytes)
+		}
+
+		log := fmt.Sprintf("Method: %s, Path: %s, Query: %s, Body: %v",
+			c.Request.Method,
+			c.Request.URL.Path,
+			c.Request.URL.RawQuery,
+			requestBody,
+		)
+		fmt.Println(log)
+
+		c.Next()
+	}
+}
+
+func maskAndTruncateJSON(data interface{}, maskKeys []string) interface{} {
+	switch v := data.(type) {
+	case map[string]interface{}:
+		result := make(map[string]interface{})
+		for key, value := range v {
+			if lo.Contains(maskKeys, key) {
+				result[key] = "***MASKED***"
+			} else {
+				result[key] = maskAndTruncateJSON(value, maskKeys)
+			}
+		}
+		return result
+	case []interface{}:
+		for i, value := range v {
+			v[i] = maskAndTruncateJSON(value, maskKeys)
+		}
+		return v
+	case string:
+		if len(v) > 256 {
+			return v[:256]
+		}
+		return v
+	default:
+		return v
 	}
 }
