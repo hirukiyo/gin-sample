@@ -28,7 +28,7 @@ go mod tidy
 ```
 make migrate-create [migration name]
 ```
-* 実行すると database/migrations に up と down のファイルが作成される
+* 実行すると infra/mysql/migrations に up と down のファイルが作成される
 ```
 make migrate-create create_accounts
 /migrations/20241229091950_create_accounts.up.sql
@@ -36,8 +36,8 @@ make migrate-create create_accounts
 ```
 * 生成されたファイルの所有者がrootになる場合(linux環境で発生)はchownコマンドで所有者を変更
 ```
-ls -la database/migrations
-sudo chown [your user]:[your group] -R database/migrations
+ls -la infra/mysql/migrations
+sudo chown [your user]:[your group] -R infra/mysql/migrations
 ```
 
 ## マイグレーション適用
@@ -51,13 +51,13 @@ make migrate-up
 ```
 make generate-model
 ```
-* 実行すると database/models に ファイルが生成される
+* 実行すると infra/mysql/models に ファイルが生成される
 ```
-database/models/accounts.gen.go
-database/models/schema_migrations.gen.go
+infra/mysql/models/accounts.gen.go
+infra/mysql/models/schema_migrations.gen.go
 ```
 * 生成されたファイルの所有者がrootになる場合(linux環境で発生)はchownコマンドで所有者を変更
 ```
-ls -la database/migrations
-sudo chown [your user]:[your group] -R database/models
+ls -la infra/mysql/migrations
+sudo chown [your user]:[your group] -R infra/mysql/models
 ```

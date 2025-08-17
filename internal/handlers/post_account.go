@@ -3,8 +3,8 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/hirukiyo/gin-sample/database/models"
-	"github.com/hirukiyo/gin-sample/database/mysql"
+	"github.com/hirukiyo/gin-sample/infra/mysql"
+	"github.com/hirukiyo/gin-sample/infra/mysql/models"
 	"github.com/hirukiyo/gin-sample/internal/app/applog"
 )
 

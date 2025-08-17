@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/hirukiyo/gin-sample/database/mysql"
+	"github.com/hirukiyo/gin-sample/infra/mysql"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

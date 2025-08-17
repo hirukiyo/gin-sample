@@ -14,7 +14,7 @@ import (
 	"github.com/rs/xid"
 	"github.com/samber/lo"
 
-	"github.com/hirukiyo/gin-sample/database/mysql"
+	"github.com/hirukiyo/gin-sample/infra/mysql"
 	"github.com/hirukiyo/gin-sample/internal/app"
 	"github.com/hirukiyo/gin-sample/internal/app/applog"
 	"github.com/hirukiyo/gin-sample/internal/handlers"

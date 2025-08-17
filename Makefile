@@ -2,7 +2,7 @@ include .env
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 DC = docker compose -f $(MAKEFILE_DIR)compose.yml
-DM = docker run --rm -it -v ./database/migrations:/migrations --network gin_default migrate/migrate -path=/migrations/ -database 'mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_HOST):$(MYSQL_PORT))/$(MYSQL_DATABASE)'
+DM = docker run --rm -it -v ./infra/mysql/migrations:/migrations --network gin_default migrate/migrate -path=/migrations/ -database 'mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_HOST):$(MYSQL_PORT))/$(MYSQL_DATABASE)'
 
 # for Help
 %:
@@ -53,4 +53,4 @@ migrate-drop:
 #------------------------------------------------------------------------------
 .PHONY: generate-model
 generate-model:
-	$(DC) exec api /bin/bash -c "gentool -db mysql -dsn '$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_HOST):$(MYSQL_PORT))/$(MYSQL_DATABASE)' -fieldNullable -fieldSignable -fieldWithIndexTag -fieldWithTypeTag -modelPkgName models -onlyModel -outPath ./database/models/"
+	$(DC) exec api /bin/bash -c "gentool -db mysql -dsn '$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_HOST):$(MYSQL_PORT))/$(MYSQL_DATABASE)' -fieldNullable -fieldSignable -fieldWithIndexTag -fieldWithTypeTag -modelPkgName models -onlyModel -outPath ./infra/mysql/models/"
