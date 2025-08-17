@@ -11,7 +11,7 @@
         "--context",
         "ide-assistant",
         "--project",
-        "${workspaceFolder}" // 環境変数から読み込み
+        "./" // 環境変数から読み込み
       ]
     }
   }
