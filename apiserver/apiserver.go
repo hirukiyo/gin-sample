@@ -1,4 +1,4 @@
-package main
+package apiserver
 
 import (
 	"bytes"
@@ -7,7 +7,6 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -21,11 +20,11 @@ import (
 	"ginapp/internal/handlers"
 )
 
-func main() {
+func StartAPIServer() int {
 	env, err := app.LoadEnvironmentFromDotenv()
 	if err != nil {
 		slog.Error("environment load error.", "err", err)
-		os.Exit(1)
+		return 1
 	}
 
 	applog.SetLogger(env)
@@ -52,7 +51,7 @@ func main() {
 	)
 	if err != nil {
 		slog.Error("mysql connection error.", "err", err)
-		os.Exit(1)
+		return 1
 	}
 
 	// create app
@@ -68,8 +67,10 @@ func main() {
 
 	if err := app.Engine.Run(fmt.Sprintf("%s:%d", app.Env.AppHost, app.Env.AppPort)); err != nil {
 		slog.Error("server run error.", "err", err)
-		os.Exit(1)
+		return 1
 	}
+
+	return 0
 }
 
 func RequestLoggerMiddleware() gin.HandlerFunc {
