@@ -3,9 +3,9 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 
-	"ginapp/database/models"
-	"ginapp/database/mysql"
-	"ginapp/internal/app/applog"
+	"github.com/hirukiyo/gin-sample/database/models"
+	"github.com/hirukiyo/gin-sample/database/mysql"
+	"github.com/hirukiyo/gin-sample/internal/app/applog"
 )
 
 // curl -X POST -H "Content-Type: application/json" -d "{"name" : "佐藤" , "mail" : "sato@example.com"}" localhost:8080/api/account

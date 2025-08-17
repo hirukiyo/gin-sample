@@ -14,10 +14,10 @@ import (
 	"github.com/rs/xid"
 	"github.com/samber/lo"
 
-	"ginapp/database/mysql"
-	"ginapp/internal/app"
-	"ginapp/internal/app/applog"
-	"ginapp/internal/handlers"
+	"github.com/hirukiyo/gin-sample/database/mysql"
+	"github.com/hirukiyo/gin-sample/internal/app"
+	"github.com/hirukiyo/gin-sample/internal/app/applog"
+	"github.com/hirukiyo/gin-sample/internal/handlers"
 )
 
 func StartAPIServer() int {

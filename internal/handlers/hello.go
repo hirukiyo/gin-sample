@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 
-	"ginapp/internal/app/applog"
+	"github.com/hirukiyo/gin-sample/internal/app/applog"
 )
 
 func Hello() gin.HandlerFunc {

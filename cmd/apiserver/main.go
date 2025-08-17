@@ -1,8 +1,9 @@
 package main
 
 import (
-	"ginapp/apiserver"
 	"os"
+
+	"github.com/hirukiyo/gin-sample/apiserver"
 )
 
 func main() {

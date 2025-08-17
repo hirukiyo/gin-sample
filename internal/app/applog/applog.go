@@ -2,12 +2,13 @@ package applog
 
 import (
 	"context"
-	"ginapp/internal/app"
 	"log/slog"
 	"os"
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/hirukiyo/gin-sample/internal/app"
 
 	"github.com/MatusOllah/slogcolor"
 	"github.com/gin-gonic/gin"
