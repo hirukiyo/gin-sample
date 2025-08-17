@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/hirukiyo/gin-sample/internal/app"
+	"github.com/hirukiyo/gin-sample/apiserver/app"
 )
 
 // RegisterRouteHandler is a function to register route handler

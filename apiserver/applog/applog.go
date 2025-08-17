@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hirukiyo/gin-sample/internal/app"
+	"github.com/hirukiyo/gin-sample/apiserver/app"
 
 	"github.com/MatusOllah/slogcolor"
 	"github.com/gin-gonic/gin"
