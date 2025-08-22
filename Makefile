@@ -25,10 +25,10 @@ down:
 
 .PHONY: log-api, log-mysql
 log-api:
-	$(eval ID := $(shell docker ps | rg 'gin-api-1' | cut -d' ' -f1))
+	$(eval ID := $(shell docker ps | rg 'gin-sample-api-1' | cut -d' ' -f1))
 	docker logs -f $(ID)
 log-mysql:
-	$(eval ID := $(shell docker ps | rg 'gin-mysql-1' | cut -d' ' -f1))
+	$(eval ID := $(shell docker ps | rg 'gin-sample-mysql-1' | cut -d' ' -f1))
 	docker logs -f $(ID)
 
 .PHONY: exec-api, exec-mysql
