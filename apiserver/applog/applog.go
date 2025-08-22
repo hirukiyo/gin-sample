@@ -8,16 +8,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hirukiyo/gin-sample/apiserver/app"
-
 	"github.com/MatusOllah/slogcolor"
 	"github.com/gin-gonic/gin"
 )
 
-func SetLogger(cfg *app.AppEnvironment) {
+type SetLoggerInput struct {
+	AppMode     string
+	AppLogLevel string
+}
+
+func SetLogger(in *SetLoggerInput) {
 	var h slog.Handler
-	logLevel := AppLogLevel(cfg)
-	if cfg.AppMode == gin.ReleaseMode {
+	logLevel := appLogLevel(in)
+	if in.AppMode == gin.ReleaseMode {
 		h = slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{AddSource: true, Level: logLevel})
 	} else {
 		h = slogcolor.NewHandler(os.Stdout, &slogcolor.Options{
@@ -29,9 +32,9 @@ func SetLogger(cfg *app.AppEnvironment) {
 	slog.SetDefault(slog.New(h))
 }
 
-func AppLogLevel(cfg *app.AppEnvironment) slog.Level {
+func appLogLevel(in *SetLoggerInput) slog.Level {
 	appLogLevel := slog.LevelInfo
-	switch strings.ToLower(cfg.AppLogLevel) {
+	switch strings.ToLower(in.AppLogLevel) {
 	case "debug":
 		appLogLevel = slog.LevelDebug
 	case "info":

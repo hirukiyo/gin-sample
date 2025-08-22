@@ -27,7 +27,10 @@ func StartAPIServer() int {
 		return 1
 	}
 
-	applog.SetLogger(env)
+	applog.SetLogger(&applog.SetLoggerInput{
+		AppMode:     env.AppMode,
+		AppLogLevel: env.AppLogLevel,
+	})
 	gin.SetMode(env.AppMode)
 	engine := gin.Default()
 
