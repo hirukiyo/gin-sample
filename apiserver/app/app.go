@@ -31,8 +31,9 @@ type AppEnvironment struct {
 	MysqlDatabase              string `envconfig:"MYSQL_DATABASE"`
 	MysqlLogLevel              int    `envconfig:"MYSQL_LOG_LEVEL"`
 	MysqlMaxIdleConns          int    `envconfig:"MYSQL_MAX_IDLE_CONNS"`
-	MysqlMaxOpenConns          int    `envconfig:"MYSQL_MAX_OPEN_CONNS"`
-	MysqlConnectionMaxLifetime int    `envconfig:"MYSQL_CONNECTION_MAX_LIFETIME"`
+		MysqlMaxOpenConns        int    `env:"MYSQL_MAX_OPEN_CONNS,required"`
+	MysqlConnectionMaxLifetime int    `env:"MYSQL_CONNECTION_MAX_LIFETIME,required"`
+	LogMaskKeys              []string `env:"LOG_MASK_KEYS" envSeparator:","`
 }
 
 func (e *AppEnvironment) ginMode(m string) string {

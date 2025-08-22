@@ -30,7 +30,7 @@ func StartAPIServer() int {
 	// middleware
 	{
 		engine.Use(gin.Recovery())
-		engine.Use(middleware.RequestLoggingMiddleware([]string{"password", "secret"}))
+		engine.Use(middleware.RequestLoggingMiddleware(env.LogMaskKeys))
 	}
 
 	// setup
