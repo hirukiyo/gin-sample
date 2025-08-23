@@ -10,7 +10,6 @@ import (
 	"github.com/hirukiyo/gin-sample/apiserver/applog"
 	"github.com/hirukiyo/gin-sample/apiserver/middleware"
 	"github.com/hirukiyo/gin-sample/infra/mysql"
-	"github.com/hirukiyo/gin-sample/internal/handlers"
 )
 
 func StartAPIServer() int {
@@ -59,7 +58,7 @@ func StartAPIServer() int {
 
 	slog.Info("app start.", "env", app.Env)
 
-	handlers.RegisterRouteHandler(app)
+	RegisterRouteHandler(app)
 
 	if err := app.Engine.Run(fmt.Sprintf("%s:%d", app.Env.AppHost, app.Env.AppPort)); err != nil {
 		slog.Error("server run error.", "err", err)
