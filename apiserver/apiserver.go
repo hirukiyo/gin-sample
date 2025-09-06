@@ -5,15 +5,21 @@ import (
 	"log/slog"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
-	"github.com/hirukiyo/gin-sample/apiserver/app"
 	"github.com/hirukiyo/gin-sample/apiserver/applog"
 	"github.com/hirukiyo/gin-sample/apiserver/middleware"
 	"github.com/hirukiyo/gin-sample/infra/mysql"
 )
 
+type App struct {
+	Env    *AppEnvironment
+	Engine *gin.Engine
+	GormDB *gorm.DB
+}
+
 func StartAPIServer() int {
-	env, err := app.LoadEnvironmentFromDotenv()
+	env, err := LoadEnvironmentFromDotenv()
 	if err != nil {
 		slog.Error("environment load error.", "err", err)
 		return 1
@@ -50,7 +56,7 @@ func StartAPIServer() int {
 	}
 
 	// create app
-	app := &app.App{
+	app := &App{
 		Env:    env,
 		Engine: engine,
 		GormDB: gormDB,

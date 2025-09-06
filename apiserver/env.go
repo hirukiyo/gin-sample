@@ -1,18 +1,10 @@
-package app
+package apiserver
 
 import (
-	"gorm.io/gorm"
-
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
-
-type App struct {
-	Env    *AppEnvironment
-	Engine *gin.Engine
-	GormDB *gorm.DB
-}
 
 // Environment
 // -----------------------------------------------------------------------------

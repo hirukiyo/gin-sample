@@ -3,12 +3,11 @@ package apiserver
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/hirukiyo/gin-sample/apiserver/app"
 	"github.com/hirukiyo/gin-sample/apiserver/handlers"
 )
 
 // RegisterRouteHandler is a function to register route handler
-func RegisterRouteHandler(app *app.App) {
+func RegisterRouteHandler(app *App) {
 	// curl -i http://localhost:8080/ping
 	app.Engine.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
