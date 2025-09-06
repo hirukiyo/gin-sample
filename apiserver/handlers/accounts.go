@@ -39,3 +39,24 @@ func PostAccount(db *gorm.DB) gin.HandlerFunc {
 		// })
 	}
 }
+
+// curl -X GET -H "Content-Type: application/json" localhost:8080/api/account
+func FindAccounts(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		applog.Debug(c, "execute FindAccounts handler")
+
+		accounts, err := gorm.G[models.Account](db).Find(c)
+		if err != nil {
+
+			applog.Error(c, "account fetch error", "err", err)
+			c.JSON(500, gin.H{
+				"message": "Internal Server Error",
+			})
+			return
+		}
+		applog.Debug(c, "account fetch success", "accounts", accounts)
+		c.JSON(200, gin.H{
+			"result": accounts,
+		})
+	}
+}
