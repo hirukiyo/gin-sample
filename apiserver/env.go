@@ -1,6 +1,8 @@
 package apiserver
 
 import (
+	"log/slog"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
@@ -36,10 +38,11 @@ func (e *AppEnvironment) ginMode(m string) string {
 	return m
 }
 
-func LoadEnvironment() (*AppEnvironment, error) {
+func loadEnvironment() (*AppEnvironment, error) {
 	var env AppEnvironment
 	err := envconfig.Process("", &env)
 	if err != nil {
+		slog.Info("binding env param error.", "err", err)
 		return nil, err
 	}
 
@@ -49,14 +52,11 @@ func LoadEnvironment() (*AppEnvironment, error) {
 	return &env, nil
 }
 
-func LoadEnvironmentFromDotenv() (*AppEnvironment, error) {
-	err := LoadDotEnv()
+func loadEnvironmentFromDotenv() (*AppEnvironment, error) {
+	err := godotenv.Load()
 	if err != nil {
+		slog.Info("dotenv load error.", "err", err)
 		return nil, err
 	}
-	return LoadEnvironment()
-}
-
-func LoadDotEnv() error {
-	return godotenv.Load()
+	return loadEnvironment()
 }
