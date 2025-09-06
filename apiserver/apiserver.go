@@ -33,7 +33,7 @@ func StartAPIServer() int {
 	}
 
 	// setup
-	mysqlConn, err := mysql.NewConnection(
+	gormDB, err := mysql.NewConnection(
 		env.MysqlUser,
 		env.MysqlPassword,
 		env.MysqlHost,
@@ -53,7 +53,7 @@ func StartAPIServer() int {
 	app := &app.App{
 		Env:    env,
 		Engine: engine,
-		Mysql:  mysqlConn,
+		GormDB: gormDB,
 	}
 
 	slog.Info("app start.", "env", app.Env)
