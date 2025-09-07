@@ -11,15 +11,17 @@ import (
 	"github.com/hirukiyo/gin-sample/infra/mysql/models"
 )
 
-// curl -X POST -H "Content-Type: application/json" -d "{"name" : "佐藤" , "mail" : "sato@example.com"}" localhost:8080/api/accounts
+// curl -X POST -H "Content-Type: application/json" -d '{"name":"test", "email":"test@example.com", "password":"password"}' localhost:8080/api/accounts
 func PostAccount(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute PostAccount handler")
-		account := &models.Account{
-			Name:     "Test1",
-			Email:    "test@email.com",
-			Password: "ffff",
+		var account models.Account
+		if err := c.ShouldBindJSON(&account); err != nil {
+			applog.Error(c, "invalid request body", "err", err)
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
 		}
+
 		if result := db.Create(&account); result.Error != nil {
 			applog.Error(c, "account create error", "err", result.Error)
 			c.JSON(500, gin.H{
@@ -27,6 +29,9 @@ func PostAccount(db *gorm.DB) gin.HandlerFunc {
 			})
 			return
 		}
+		c.JSON(201, gin.H{
+			"result": account,
+		})
 	}
 }
 
