@@ -90,3 +90,43 @@ func FindAccountByID(db *gorm.DB) gin.HandlerFunc {
 		})
 	}
 }
+
+// curl -X DELETE -H "Content-Type: application/json" localhost:8080/api/accounts/1
+func DeleteAccountByID(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		applog.Debug(c, "execute DeleteAccountByID handler")
+
+		id := c.Param("id")
+		// idが未指定の場合は400を返却
+		if id == "" {
+			applog.Warn(c, "id is not specified")
+			c.JSON(400, gin.H{
+				"message": "id is not specified",
+			})
+			return
+		}
+
+		rowsAffected, err := gorm.G[models.Account](db).Where("id = ?", id).Delete(c)
+		if err != nil {
+			// その他のエラーは500を返却
+			applog.Error(c, "account delete error", "err", err)
+			c.JSON(500, gin.H{
+				"message": "Internal Server Error",
+			})
+			return
+		}
+
+		if rowsAffected == 0 {
+			// idが存在しない場合は404を返却
+			applog.Warn(c, "account not found", "id", id)
+			c.JSON(404, gin.H{
+				"message": "Not Found",
+			})
+			return
+		}
+
+		// 削除できた場合は200を返却
+		applog.Debug(c, "account delete success", "id", id)
+		c.JSON(200, nil)
+	}
+}
