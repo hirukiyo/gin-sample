@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -102,6 +103,14 @@ func DeleteAccountByID(db *gorm.DB) gin.HandlerFunc {
 			applog.Warn(c, "id is not specified")
 			c.JSON(400, gin.H{
 				"message": "id is not specified",
+			})
+			return
+		}
+
+		if _, err := strconv.ParseUint(id, 10, 64); err != nil {
+			applog.Warn(c, "id is not uint64", "id", id)
+			c.JSON(400, gin.H{
+				"message": "id is not uint64",
 			})
 			return
 		}
