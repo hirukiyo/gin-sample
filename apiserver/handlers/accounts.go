@@ -11,7 +11,7 @@ import (
 	"github.com/hirukiyo/gin-sample/infra/mysql/models"
 )
 
-// curl -X POST -H "Content-Type: application/json" -d '{"name":"test", "email":"test@example.com", "password":"password"}' localhost:8080/api/accounts
+// curl -X POST -H "Content-Type: application/json" -d '{"name":"test user 1", "email":"test_user_1@example.com", "password":"password"}' localhost:8080/api/accounts
 func PostAccount(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute PostAccount handler")

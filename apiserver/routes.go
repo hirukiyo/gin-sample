@@ -19,7 +19,7 @@ func RegisterRouteHandler(app *App) {
 	// curl -i http://localhost:8080/api/hello
 	api.GET("/hello", handlers.Hello())
 
-	// curl -X POST -H "Content-Type: application/json" -d "{"name" : "佐藤" , "mail" : "sato@example.com"}" localhost:8080/api/accounts
+	// curl -X POST -H "Content-Type: application/json" -d '{"name":"test user 1", "email":"test_user_1@example.com", "password":"password"}' localhost:8080/api/accounts
 	api.POST("/accounts", handlers.PostAccount(app.GormDB))
 
 	// curl -X GET -H "Content-Type: application/json" localhost:8080/api/accounts
