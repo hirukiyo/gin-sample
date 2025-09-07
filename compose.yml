@@ -12,15 +12,27 @@ services:
     working_dir: /app
     depends_on:
       - mysql
+    networks:
+      - container-link
   mysql:
     image: mysql:8.0
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - container-link
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
       MYSQL_DATABASE: mydb
+
 volumes:
   mysql-data:
+
+networks:
+  default:
+    external: true
+    name: bridge
+  container-link:
+    name: gin-sample-network
