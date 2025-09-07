@@ -1,22 +1,21 @@
-# APP_MODE: [ debug | release ] default: debug
-APP_MODE=debug
+# APP
+APP_MODE=debug # APP_MODE: [ debug | release ] default: debug
 APP_NAME=ginapp
 APP_HOST=0.0.0.0
 APP_PORT=8080
 APP_VERSION=1.0.0
-# APP_LOG_LEVEL: [ debug | info | warn | error ] default: info
-APP_LOG_LEVEL=debug
+APP_LOG_LEVEL=debug # APP_LOG_LEVEL: [ debug | info | warn | error ] default: info
 
 # MySQL
-MYSQL_USER=user
-MYSQL_PASSWORD=password
-MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=root
+MYSQL_HOST=mysql
 MYSQL_PORT=3306
-MYSQL_DATABASE=ginapp
-MYSQL_LOG_LEVEL=info
-MYSQL_MAX_IDLE_CONNS=10
-MYSQL_MAX_OPEN_CONNS=100
-MYSQL_CONNECTION_MAX_LIFETIME=300
+MYSQL_DATABASE=mydb
+MYSQL_LOG_LEVEL=4 # MYSQL_LOG_LEVEL: 1: silent, 2: error, 3: warn, 4: info
+MYSQL_MAX_IDLE_CONNS=1
+MYSQL_MAX_OPEN_CONNS=10
+MYSQL_CONNECTION_MAX_LIFETIME=90
 
 # Logging
 LOG_MASK_KEYS=password,secret
