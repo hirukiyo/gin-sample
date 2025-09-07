@@ -10,7 +10,7 @@ import (
 	"github.com/hirukiyo/gin-sample/infra/mysql/models"
 )
 
-// curl -X POST -H "Content-Type: application/json" -d "{"name" : "佐藤" , "mail" : "sato@example.com"}" localhost:8080/api/account
+// curl -X POST -H "Content-Type: application/json" -d "{"name" : "佐藤" , "mail" : "sato@example.com"}" localhost:8080/api/accounts
 func PostAccount(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute PostAccount handler")
@@ -26,23 +26,10 @@ func PostAccount(db *gorm.DB) gin.HandlerFunc {
 			})
 			return
 		}
-
-		// var account models.Account
-		// if err := db.First(&account).Error; err != nil {
-		// 	applog.Error(c, "account fetch error", "err", err)
-		// 	c.JSON(500, gin.H{
-		// 		"message": "Internal Server Error",
-		// 	})
-		// 	return
-		// }
-		// applog.Info(c, "account create success", "account", account)
-		// c.JSON(200, gin.H{
-		// 	"message": account,
-		// })
 	}
 }
 
-// curl -X GET -H "Content-Type: application/json" localhost:8080/api/account
+// curl -X GET -H "Content-Type: application/json" localhost:8080/api/accounts
 func FindAccounts(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute FindAccounts handler")
