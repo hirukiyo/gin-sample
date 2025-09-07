@@ -28,6 +28,9 @@ func RegisterRouteHandler(app *App) {
 	// curl -X GET -H "Content-Type: application/json" localhost:8080/api/accounts/:id
 	api.GET("/accounts/:id", handlers.FindAccountByID(app.GormDB))
 
+	// curl -X PUT -H "Content-Type: application/json" localhost:8080/api/accounts/:id
+	api.PUT("/accounts/:id", handlers.UpdateAccountByID(app.GormDB))
+
 	// curl -X DELETE -H "Content-Type: application/json" localhost:8080/api/accounts/:id
 	api.DELETE("/accounts/:id", handlers.DeleteAccountByID(app.GormDB))
 }

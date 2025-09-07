@@ -22,8 +22,9 @@ func PostAccount(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		if result := db.Create(&account); result.Error != nil {
-			applog.Error(c, "account create error", "err", result.Error)
+		err := gorm.G[models.Account](db).Create(c, &account)
+		if err != nil {
+			applog.Error(c, "account create error", "err", err)
 			c.JSON(500, gin.H{
 				"message": "Internal Server Error",
 			})
@@ -110,9 +111,7 @@ func DeleteAccountByID(db *gorm.DB) gin.HandlerFunc {
 				"message": "id is not specified",
 			})
 			return
-		}
-
-		if _, err := strconv.ParseUint(id, 10, 64); err != nil {
+		} else if _, err := strconv.ParseUint(id, 10, 64); err != nil {
 			applog.Warn(c, "id is not uint64", "id", id)
 			c.JSON(400, gin.H{
 				"message": "id is not uint64",
@@ -142,5 +141,80 @@ func DeleteAccountByID(db *gorm.DB) gin.HandlerFunc {
 		// 削除できた場合は200を返却
 		applog.Debug(c, "account delete success", "id", id)
 		c.JSON(200, nil)
+	}
+}
+
+// curl -X PUT -H "Content-Type: application/json" -d '{"name":"new_name", "email":"new@example.com", "password":"new_password"}' localhost:8080/api/accounts/1
+func UpdateAccountByID(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		applog.Debug(c, "execute UpdateAccountByID handler")
+
+		id := c.Param("id")
+		// idが未指定の場合は400を返却
+		if id == "" {
+			applog.Warn(c, "id is not specified")
+			c.JSON(400, gin.H{
+				"message": "id is not specified",
+			})
+			return
+		} else if _, err := strconv.ParseUint(id, 10, 64); err != nil {
+			applog.Warn(c, "id is not uint64", "id", id)
+			c.JSON(400, gin.H{
+				"message": "id is not uint64",
+			})
+			return
+		}
+
+		account, err := gorm.G[models.Account](db).Where("id = ?", id).First(c)
+		if err != nil {
+			// idが存在しない場合は404を返却
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				applog.Warn(c, "account not found", "id", id)
+				c.JSON(404, gin.H{
+					"message": "Not Found",
+				})
+				return
+			}
+			// その他のエラーは500を返却
+			applog.Error(c, "account fetch error", "err", err)
+			c.JSON(500, gin.H{
+				"message": "Internal Server Error",
+			})
+			return
+		}
+
+		var req models.Account
+		if err := c.ShouldBindJSON(&req); err != nil {
+			applog.Error(c, "invalid request body", "err", err)
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		account.Name = req.Name
+		account.Email = req.Email
+		account.Password = req.Password
+
+		rowsAffected, err := gorm.G[models.Account](db).Updates(c, account)
+		if err != nil {
+			// その他のエラーは500を返却
+			applog.Error(c, "account update error", "err", err)
+			c.JSON(500, gin.H{
+				"message": "Internal Server Error",
+			})
+			return
+		}
+
+		if rowsAffected == 0 {
+			// ここでrowAffectedが0の場合は更新が失敗している
+			applog.Error(c, "account update row affected is zero", "err", err)
+			c.JSON(500, gin.H{
+				"message": "Internal Server Error",
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"result": account,
+		})
 	}
 }
