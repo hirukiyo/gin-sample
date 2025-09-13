@@ -8,11 +8,12 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/hirukiyo/gin-sample/apiserver/applog"
+	"github.com/hirukiyo/gin-sample/application/usecase"
 	"github.com/hirukiyo/gin-sample/infra/mysql/models"
 )
 
 // curl -X POST -H "Content-Type: application/json" -d '{"name":"test user 1", "email":"test_user_1@example.com", "password":"password"}' localhost:8080/api/accounts
-func PostAccount(db *gorm.DB) gin.HandlerFunc {
+func PostAccount(db *gorm.DB, uc usecase.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute PostAccount handler")
 		var account models.Account
@@ -37,7 +38,7 @@ func PostAccount(db *gorm.DB) gin.HandlerFunc {
 }
 
 // curl -X GET -H "Content-Type: application/json" localhost:8080/api/accounts
-func FindAccounts(db *gorm.DB) gin.HandlerFunc {
+func FindAccounts(db *gorm.DB, uc usecase.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute FindAccounts handler")
 
@@ -58,7 +59,7 @@ func FindAccounts(db *gorm.DB) gin.HandlerFunc {
 }
 
 // curl -X GET -H "Content-Type: application/json" localhost:8080/api/accounts/1
-func FindAccountByID(db *gorm.DB) gin.HandlerFunc {
+func FindAccountByID(db *gorm.DB, uc usecase.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute FindAccountByID handler")
 
@@ -99,7 +100,7 @@ func FindAccountByID(db *gorm.DB) gin.HandlerFunc {
 }
 
 // curl -X DELETE -H "Content-Type: application/json" localhost:8080/api/accounts/1
-func DeleteAccountByID(db *gorm.DB) gin.HandlerFunc {
+func DeleteAccountByID(db *gorm.DB, uc usecase.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute DeleteAccountByID handler")
 
@@ -145,7 +146,7 @@ func DeleteAccountByID(db *gorm.DB) gin.HandlerFunc {
 }
 
 // curl -X PUT -H "Content-Type: application/json" -d '{"name":"new_name", "email":"new@example.com", "password":"new_password"}' localhost:8080/api/accounts/1
-func UpdateAccountByID(db *gorm.DB) gin.HandlerFunc {
+func UpdateAccountByID(db *gorm.DB, uc usecase.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute UpdateAccountByID handler")
 
