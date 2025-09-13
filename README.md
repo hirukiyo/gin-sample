@@ -21,6 +21,16 @@ ref external packakge
 go mod tidy
 ```
 
+# Go versionup
+* go.mod 内の go のバージョンを修正
+```
+go mod edit -go=1.25
+```
+* goのモジュールアップデート
+```
+go get -u ./...
+```
+
 # Database Migration
 
 ## マイグレーションファイルの作成

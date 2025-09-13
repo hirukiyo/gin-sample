@@ -1,4 +1,4 @@
-FROM golang:1.24
+FROM golang:1.25
 
 WORKDIR /app
 COPY go.mod ./
@@ -17,7 +17,9 @@ RUN curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh
 RUN go install github.com/google/wire/cmd/wire@latest
 
 # install gorm gen tool
-RUN go install gorm.io/gen/tools/gentool@latest
+# go 1.25にした際にbuild時にエラーがでたため一旦コメントアウト
+# see: https://github.com/go-gorm/gen/issues/1366
+# RUN go install gorm.io/gen/tools/gentool@latest
 
 # execute air
 CMD ["air", "-c", ".air.toml"]
