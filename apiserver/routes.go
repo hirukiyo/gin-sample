@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/hirukiyo/gin-sample/apiserver/handlers"
-	"github.com/hirukiyo/gin-sample/application/usecase"
+	"github.com/hirukiyo/gin-sample/application/usecases"
 )
 
 // RegisterRouteHandler is a function to register route handler
@@ -20,7 +20,7 @@ func RegisterRouteHandler(app *App) {
 	// curl -i http://localhost:8080/api/hello
 	api.GET("/hello", handlers.Hello())
 
-	accountUsecase := usecase.NewAccountUsecase(app.GormDB)
+	accountUsecase := usecases.NewAccountUsecase(app.GormDB)
 
 	// curl -X POST -H "Content-Type: application/json" -d '{"name":"test user 1", "email":"test_user_1@example.com", "password":"password"}' localhost:8080/api/accounts
 	api.POST("/accounts", handlers.PostAccount(app.GormDB, accountUsecase))
