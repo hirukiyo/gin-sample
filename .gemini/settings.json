@@ -1,18 +1,18 @@
 {
   "mcpServers": {
-    "serena": {
-      "displayName": "Serena Coding Agent",
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/oraios/serena",
-        "serena",
-        "start-mcp-server",
-        "--context",
-        "ide-assistant",
-        "--project",
-        "./" // 環境変数から読み込み
-      ]
-    }
+    // "serena": {
+    //   "displayName": "Serena Coding Agent",
+    //   "command": "uvx",
+    //   "args": [
+    //     "--from",
+    //     "git+https://github.com/oraios/serena",
+    //     "serena",
+    //     "start-mcp-server",
+    //     "--context",
+    //     "ide-assistant",
+    //     "--project",
+    //     "./" // 環境変数から読み込み
+    //   ]
+    // }
   }
 }
