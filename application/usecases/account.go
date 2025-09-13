@@ -2,8 +2,10 @@ package usecases
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"github.com/hirukiyo/gin-sample/infra/mysql/models"
 	"gorm.io/gorm"
 )
 
@@ -23,12 +25,11 @@ type FindAccountsInput struct {
 }
 
 type AccountOutput struct {
-	ID        uint64
-	Name      string
-	Email     string
-	Password  string
-	CreatedAt *time.Time
-	UpdatedAt *time.Time
+	ID        uint64     `json:"id"`
+	Name      string     `json:"name"`
+	Email     string     `json:"email"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
 }
 
 type AccountUsecase interface {
@@ -59,7 +60,17 @@ func (u *accountUsecase) DeleteAccount(ctx context.Context, id uint64) error {
 	return nil
 }
 func (u *accountUsecase) GetAccount(ctx context.Context, id uint64) (*AccountOutput, error) {
-	return nil, nil
+	account, err := gorm.G[models.Account](u.db).Where("id = ?", id).First(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get account: %w", err)
+	}
+	return &AccountOutput{
+		ID:        account.ID,
+		Name:      account.Name,
+		Email:     account.Email,
+		CreatedAt: account.CreatedAt,
+		UpdatedAt: account.UpdatedAt,
+	}, nil
 }
 func (u *accountUsecase) FindAccounts(ctx context.Context, conditions *FindAccountsInput) ([]*AccountOutput, error) {
 	return []*AccountOutput{}, nil

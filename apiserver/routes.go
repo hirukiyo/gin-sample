@@ -29,11 +29,11 @@ func RegisterRouteHandler(app *App) {
 	api.GET("/accounts", handlers.FindAccounts(app.GormDB, accountUsecase))
 
 	// curl -X GET -H "Content-Type: application/json" localhost:8080/api/accounts/:id
-	api.GET("/accounts/:id", handlers.FindAccountByID(app.GormDB, accountUsecase))
+	api.GET("/accounts/:id", handlers.GetAccount(app.GormDB, accountUsecase))
 
 	// curl -X PUT -H "Content-Type: application/json" localhost:8080/api/accounts/:id
-	api.PUT("/accounts/:id", handlers.UpdateAccountByID(app.GormDB, accountUsecase))
+	api.PUT("/accounts/:id", handlers.UpdateAccount(app.GormDB, accountUsecase))
 
 	// curl -X DELETE -H "Content-Type: application/json" localhost:8080/api/accounts/:id
-	api.DELETE("/accounts/:id", handlers.DeleteAccountByID(app.GormDB, accountUsecase))
+	api.DELETE("/accounts/:id", handlers.DeleteAccount(app.GormDB, accountUsecase))
 }

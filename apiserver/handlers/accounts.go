@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -58,34 +59,43 @@ func FindAccounts(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 	}
 }
 
-// curl -X GET -H "Content-Type: application/json" localhost:8080/api/accounts/1
-func FindAccountByID(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
+// curl -i -X GET -H "Content-Type: application/json" localhost:8080/api/accounts/1
+func GetAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		applog.Debug(c, "execute FindAccountByID handler")
+		applog.Debug(c, "execute GetAccount handler")
 
-		id := c.Param("id")
+		paramId := c.Param("id")
 		// idが未指定の場合は400を返却
-		if id == "" {
+		if paramId == "" {
 			applog.Warn(c, "id is not specified")
-			c.JSON(400, gin.H{
+			c.JSON(http.StatusBadRequest, gin.H{
 				"message": "id is not specified",
 			})
 			return
 		}
 
-		account, err := gorm.G[models.Account](db).Where("id = ?", id).First(c)
+		id, err := strconv.ParseUint(paramId, 10, 64)
+		if err != nil {
+			applog.Warn(c, "id is invalid parameter", "id", paramId)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "id is invalid parameter",
+			})
+			return
+		}
+
+		account, err := uc.GetAccount(c, id)
 		if err != nil {
 			// idが存在しない場合は404を返却
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				applog.Warn(c, "account not found", "id", id)
-				c.JSON(404, gin.H{
+				applog.Warn(c, "account not found", "id", id, "err", err)
+				c.JSON(http.StatusNotFound, gin.H{
 					"message": "Not Found",
 				})
 				return
 			}
 			// その他のエラーは500を返却
 			applog.Error(c, "account fetch error", "err", err)
-			c.JSON(500, gin.H{
+			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "Internal Server Error",
 			})
 			return
@@ -93,16 +103,16 @@ func FindAccountByID(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 
 		// 取得できた場合は200とaccount情報を返却
 		applog.Debug(c, "account fetch success", "account", account)
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"result": account,
 		})
 	}
 }
 
 // curl -X DELETE -H "Content-Type: application/json" localhost:8080/api/accounts/1
-func DeleteAccountByID(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
+func DeleteAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		applog.Debug(c, "execute DeleteAccountByID handler")
+		applog.Debug(c, "execute DeleteAccount handler")
 
 		id := c.Param("id")
 		// idが未指定の場合は400を返却
@@ -146,9 +156,9 @@ func DeleteAccountByID(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc 
 }
 
 // curl -X PUT -H "Content-Type: application/json" -d '{"name":"new_name", "email":"new@example.com", "password":"new_password"}' localhost:8080/api/accounts/1
-func UpdateAccountByID(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
+func UpdateAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		applog.Debug(c, "execute UpdateAccountByID handler")
+		applog.Debug(c, "execute UpdateAccount handler")
 
 		id := c.Param("id")
 		// idが未指定の場合は400を返却
