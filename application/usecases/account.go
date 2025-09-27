@@ -26,11 +26,11 @@ type FindAccountsInput struct {
 }
 
 type AccountOutput struct {
-	ID        uint64     `json:"id"`
-	Name      string     `json:"name"`
-	Email     string     `json:"email"`
-	CreatedAt *time.Time `json:"created_at"`
-	UpdatedAt *time.Time `json:"updated_at"`
+	ID        uint64    `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type AccountUsecase interface {

@@ -10,14 +10,14 @@ import (
 
 const TableNameAccount = "accounts"
 
-// Account mapped from table <accounts>
+// Account アカウント
 type Account struct {
-	ID        uint64     `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true;comment:アカウントID" json:"id"`   // アカウントID
-	Name      string     `gorm:"column:name;type:varchar(255);not null;comment:名前" json:"name"`                            // 名前
-	Email     string     `gorm:"column:email;type:varchar(255);not null;comment:メールアドレス" json:"email"`                     // メールアドレス
-	Password  string     `gorm:"column:password;type:varchar(255);not null;comment:パスワード" json:"password"`                 // パスワード
-	CreatedAt *time.Time `gorm:"column:created_at;type:datetime;default:CURRENT_TIMESTAMP;comment:作成日時" json:"created_at"` // 作成日時
-	UpdatedAt *time.Time `gorm:"column:updated_at;type:datetime;default:CURRENT_TIMESTAMP;comment:更新日時" json:"updated_at"` // 更新日時
+	ID        uint64    `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true;comment:アカウントID" json:"id"`            // アカウントID
+	Name      string    `gorm:"column:name;type:varchar(255);not null;comment:名前" json:"name"`                                     // 名前
+	Email     string    `gorm:"column:email;type:varchar(512);not null;comment:メールアドレス" json:"email"`                              // メールアドレス
+	Password  string    `gorm:"column:password;type:varchar(255);not null;comment:パスワード" json:"password"`                          // パスワード
+	CreatedAt time.Time `gorm:"column:created_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:作成日時" json:"created_at"` // 作成日時
+	UpdatedAt time.Time `gorm:"column:updated_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新日時" json:"updated_at"` // 更新日時
 }
 
 // TableName Account's table name
