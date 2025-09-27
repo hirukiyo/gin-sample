@@ -11,21 +11,21 @@ import (
 	"github.com/hirukiyo/gin-sample/apiserver/applog"
 	"github.com/hirukiyo/gin-sample/application/usecases"
 	"github.com/hirukiyo/gin-sample/domain"
-	"github.com/hirukiyo/gin-sample/infra/mysql/models"
+	"github.com/hirukiyo/gin-sample/infra/mysql/model"
 )
 
 // curl -X POST -H "Content-Type: application/json" -d '{"name":"test user 1", "email":"test_user_1@example.com", "password":"password"}' localhost:8080/api/accounts
 func PostAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute PostAccount handler")
-		var account models.Account
+		var account model.Account
 		if err := c.ShouldBindJSON(&account); err != nil {
 			applog.Error(c, "invalid request body", "err", err)
 			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
 
-		err := gorm.G[models.Account](db).Create(c, &account)
+		err := gorm.G[model.Account](db).Create(c, &account)
 		if err != nil {
 			applog.Error(c, "account create error", "err", err)
 			c.JSON(500, gin.H{
@@ -44,7 +44,7 @@ func FindAccounts(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		applog.Debug(c, "execute FindAccounts handler")
 
-		accounts, err := gorm.G[models.Account](db).Find(c)
+		accounts, err := gorm.G[model.Account](db).Find(c)
 		if err != nil {
 
 			applog.Error(c, "account fetch error", "err", err)
@@ -131,7 +131,7 @@ func DeleteAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 			return
 		}
 
-		rowsAffected, err := gorm.G[models.Account](db).Where("id = ?", id).Delete(c)
+		rowsAffected, err := gorm.G[model.Account](db).Where("id = ?", id).Delete(c)
 		if err != nil {
 			// その他のエラーは500を返却
 			applog.Error(c, "account delete error", "err", err)
@@ -177,7 +177,7 @@ func UpdateAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 			return
 		}
 
-		account, err := gorm.G[models.Account](db).Where("id = ?", id).First(c)
+		account, err := gorm.G[model.Account](db).Where("id = ?", id).First(c)
 		if err != nil {
 			// idが存在しない場合は404を返却
 			if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -195,7 +195,7 @@ func UpdateAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 			return
 		}
 
-		var req models.Account
+		var req model.Account
 		if err := c.ShouldBindJSON(&req); err != nil {
 			applog.Error(c, "invalid request body", "err", err)
 			c.JSON(400, gin.H{"error": err.Error()})
@@ -206,7 +206,7 @@ func UpdateAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 		account.Email = req.Email
 		account.Password = req.Password
 
-		rowsAffected, err := gorm.G[models.Account](db).Updates(c, account)
+		rowsAffected, err := gorm.G[model.Account](db).Updates(c, account)
 		if err != nil {
 			// その他のエラーは500を返却
 			applog.Error(c, "account update error", "err", err)

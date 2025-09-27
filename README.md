@@ -61,13 +61,13 @@ make migrate-up
 ```
 make generate-model
 ```
-* 実行すると infra/mysql/models に ファイルが生成される
+* 実行すると infra/mysql/model に ファイルが生成される
 ```
-infra/mysql/models/accounts.gen.go
-infra/mysql/models/schema_migration.gen.go
+infra/mysql/model/accounts.gen.go
+infra/mysql/model/schema_migration.gen.go
 ```
 * 生成されたファイルの所有者がrootになる場合(linux環境で発生)はchownコマンドで所有者を変更
 ```
 ls -la infra/mysql/migration
-sudo chown [your user]:[your group] -R infra/mysql/models
+sudo chown [your user]:[your group] -R infra/mysql/model
 ```

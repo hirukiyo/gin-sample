@@ -11,7 +11,7 @@ import (
 	"github.com/hirukiyo/gin-sample/domain/entity"
 	"github.com/hirukiyo/gin-sample/domain/repository"
 	"github.com/hirukiyo/gin-sample/infra/mysql/mapper"
-	"github.com/hirukiyo/gin-sample/infra/mysql/models"
+	"github.com/hirukiyo/gin-sample/infra/mysql/model"
 )
 
 type AccountRepositoryImpl struct {
@@ -23,7 +23,7 @@ func NewAccountRepository(db *gorm.DB) repository.AccountRepository {
 }
 
 func (r *AccountRepositoryImpl) GetByID(ctx context.Context, id uint64) (*entity.Account, error) {
-	account, err := gorm.G[*models.Account](r.db).Where("id = ?", id).First(ctx)
+	account, err := gorm.G[*model.Account](r.db).Where("id = ?", id).First(ctx)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			applog.Info(ctx, "not found error in AccountRepositoryImpl#GetByID")
