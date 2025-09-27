@@ -20,6 +20,11 @@ RUN go install github.com/google/wire/cmd/wire@latest
 # go 1.25にした際にbuild時にエラーがでたため一旦コメントアウト
 # see: https://github.com/go-gorm/gen/issues/1366
 # RUN go install gorm.io/gen/tools/gentool@latest
+# フォークしてgo1.25対応したgorm-genをビルド
+RUN cd /usr/local/src  \
+    && git clone https://github.com/hirukiyo/gorm-gen.git  \
+    && cd gorm-gen/tools/gentool  \
+    && go build -o /usr/local/bin/gentool
 
 # execute air
 CMD ["air", "-c", ".air.toml"]
