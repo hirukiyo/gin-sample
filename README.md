@@ -38,16 +38,16 @@ go get -u ./...
 ```
 make migrate-create [migration name]
 ```
-* 実行すると infra/mysql/migrations に up と down のファイルが作成される
+* 実行すると infra/mysql/migration に up と down のファイルが作成される
 ```
 make migrate-create create_accounts
-/migrations/20241229091950_create_accounts.up.sql
-/migrations/20241229091950_create_accounts.down.sql
+/migration/20241229091950_create_accounts.up.sql
+/migration/20241229091950_create_accounts.down.sql
 ```
 * 生成されたファイルの所有者がrootになる場合(linux環境で発生)はchownコマンドで所有者を変更
 ```
-ls -la infra/mysql/migrations
-sudo chown [your user]:[your group] -R infra/mysql/migrations
+ls -la infra/mysql/migration
+sudo chown [your user]:[your group] -R infra/mysql/migration
 ```
 
 ## マイグレーション適用
@@ -64,10 +64,10 @@ make generate-model
 * 実行すると infra/mysql/models に ファイルが生成される
 ```
 infra/mysql/models/accounts.gen.go
-infra/mysql/models/schema_migrations.gen.go
+infra/mysql/models/schema_migration.gen.go
 ```
 * 生成されたファイルの所有者がrootになる場合(linux環境で発生)はchownコマンドで所有者を変更
 ```
-ls -la infra/mysql/migrations
+ls -la infra/mysql/migration
 sudo chown [your user]:[your group] -R infra/mysql/models
 ```

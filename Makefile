@@ -2,7 +2,7 @@ include .env
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 DC = docker compose -f $(MAKEFILE_DIR)compose.yml
-DM = docker run --rm -it -v ./infra/mysql/migrations:/migrations --network gin-sample-network  migrate/migrate -path=/migrations/ -database 'mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_HOST):$(MYSQL_PORT))/$(MYSQL_DATABASE)'
+DM = docker run --rm -it -v ./infra/mysql/migration:/migration --network gin-sample-network  migrate/migrate -path=/migration/ -database 'mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_HOST):$(MYSQL_PORT))/$(MYSQL_DATABASE)'
 
 # for Help
 %:
@@ -41,7 +41,7 @@ exec-mysql:
 #------------------------------------------------------------------------------
 .PHONY: migrate-create, migrate-up, migrate-down, migrate-drop
 migrate-create:
-	$(DM) create -ext sql -dir /migrations $(filter-out $@,$(MAKECMDGOALS))
+	$(DM) create -ext sql -dir /migration $(filter-out $@,$(MAKECMDGOALS))
 migrate-up:
 	$(DM) up
 migrate-down:
