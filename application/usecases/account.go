@@ -2,11 +2,12 @@ package usecases
 
 import (
 	"context"
-	"fmt"
 	"time"
 
-	"github.com/hirukiyo/gin-sample/infra/mysql/models"
 	"gorm.io/gorm"
+
+	"github.com/hirukiyo/gin-sample/apiserver/applog"
+	"github.com/hirukiyo/gin-sample/domain/service"
 )
 
 type AccountInput struct {
@@ -40,29 +41,32 @@ type AccountUsecase interface {
 	FindAccounts(ctx context.Context, conditions *FindAccountsInput) ([]*AccountOutput, error)
 }
 
-type accountUsecase struct {
-	db *gorm.DB
+type accountUsecaseImpl struct {
+	db             *gorm.DB
+	accountService service.AccountService
 }
 
-func NewAccountUsecase(db *gorm.DB) AccountUsecase {
-	return &accountUsecase{
-		db: db,
+func NewAccountUsecase(db *gorm.DB, accountService service.AccountService) AccountUsecase {
+	return &accountUsecaseImpl{
+		db:             db,
+		accountService: accountService,
 	}
 }
 
-func (u *accountUsecase) CreateAccount(ctx context.Context, account *AccountInput) (*AccountOutput, error) {
+func (u *accountUsecaseImpl) CreateAccount(ctx context.Context, account *AccountInput) (*AccountOutput, error) {
 	return nil, nil
 }
-func (u *accountUsecase) UpdateAccount(ctx context.Context, account *AccountInput) (*AccountOutput, error) {
+func (u *accountUsecaseImpl) UpdateAccount(ctx context.Context, account *AccountInput) (*AccountOutput, error) {
 	return nil, nil
 }
-func (u *accountUsecase) DeleteAccount(ctx context.Context, id uint64) error {
+func (u *accountUsecaseImpl) DeleteAccount(ctx context.Context, id uint64) error {
 	return nil
 }
-func (u *accountUsecase) GetAccount(ctx context.Context, id uint64) (*AccountOutput, error) {
-	account, err := gorm.G[models.Account](u.db).Where("id = ?", id).First(ctx)
+func (u *accountUsecaseImpl) GetAccount(ctx context.Context, id uint64) (*AccountOutput, error) {
+	account, err := u.accountService.GetAccountByID(ctx, id)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get account: %w", err)
+		applog.Info(ctx, "error occurred in accountUsecaseImpl#GetAccount")
+		return nil, err
 	}
 	return &AccountOutput{
 		ID:        account.ID,
@@ -72,6 +76,6 @@ func (u *accountUsecase) GetAccount(ctx context.Context, id uint64) (*AccountOut
 		UpdatedAt: account.UpdatedAt,
 	}, nil
 }
-func (u *accountUsecase) FindAccounts(ctx context.Context, conditions *FindAccountsInput) ([]*AccountOutput, error) {
+func (u *accountUsecaseImpl) FindAccounts(ctx context.Context, conditions *FindAccountsInput) ([]*AccountOutput, error) {
 	return []*AccountOutput{}, nil
 }

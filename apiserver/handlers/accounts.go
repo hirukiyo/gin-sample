@@ -10,6 +10,7 @@ import (
 
 	"github.com/hirukiyo/gin-sample/apiserver/applog"
 	"github.com/hirukiyo/gin-sample/application/usecases"
+	"github.com/hirukiyo/gin-sample/domain"
 	"github.com/hirukiyo/gin-sample/infra/mysql/models"
 )
 
@@ -86,7 +87,7 @@ func GetAccount(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 		account, err := uc.GetAccount(c, id)
 		if err != nil {
 			// idが存在しない場合は404を返却
-			if errors.Is(err, gorm.ErrRecordNotFound) {
+			if errors.Is(err, domain.ErrNotFound) {
 				applog.Warn(c, "account not found", "id", id, "err", err)
 				c.JSON(http.StatusNotFound, gin.H{
 					"message": "Not Found",

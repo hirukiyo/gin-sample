@@ -5,6 +5,8 @@ import (
 
 	"github.com/hirukiyo/gin-sample/apiserver/handlers"
 	"github.com/hirukiyo/gin-sample/application/usecases"
+	"github.com/hirukiyo/gin-sample/domain/service"
+	"github.com/hirukiyo/gin-sample/infra/mysql/repository"
 )
 
 // RegisterRouteHandler is a function to register route handler
@@ -20,7 +22,8 @@ func RegisterRouteHandler(app *App) {
 	// curl -i http://localhost:8080/api/hello
 	api.GET("/hello", handlers.Hello())
 
-	accountUsecase := usecases.NewAccountUsecase(app.GormDB)
+	accountService := service.NewGetAccountService(app.GormDB, repository.NewAccountRepository(app.GormDB))
+	accountUsecase := usecases.NewAccountUsecase(app.GormDB, accountService)
 
 	// curl -X POST -H "Content-Type: application/json" -d '{"name":"test user 1", "email":"test_user_1@example.com", "password":"password"}' localhost:8080/api/accounts
 	api.POST("/accounts", handlers.PostAccount(app.GormDB, accountUsecase))
