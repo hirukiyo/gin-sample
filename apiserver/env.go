@@ -1,7 +1,10 @@
 package apiserver
 
 import (
+	"errors"
 	"log/slog"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -30,6 +33,10 @@ type AppEnvironment struct {
 	LogMaskKeys                []string `env:"LOG_MASK_KEYS" envSeparator:","`
 }
 
+func LoadAppEnvironment() (*AppEnvironment, error) {
+	return loadEnvironmentFromDotenv()
+}
+
 func (e *AppEnvironment) ginMode(m string) string {
 	// 値補正
 	if m != gin.DebugMode && m != gin.ReleaseMode {
@@ -53,10 +60,32 @@ func loadEnvironment() (*AppEnvironment, error) {
 }
 
 func loadEnvironmentFromDotenv() (*AppEnvironment, error) {
-	err := godotenv.Load()
+	path, _ := getEnvFilePath()
+	err := godotenv.Load(path)
 	if err != nil {
 		slog.Info("dotenv load error.", "err", err)
 		return nil, err
 	}
 	return loadEnvironment()
+}
+
+func getEnvFilePath() (string, error) {
+	// プログラムのカレントディレクトリーを探索起点にする
+	dir, _ := os.Getwd()
+
+	for {
+		// 探索ディレクトリーに.envファイルが存在するか確認する
+		envPath := filepath.Join(dir, ".env")
+		if info, err := os.Stat(envPath); err == nil && !info.IsDir() {
+			return envPath, nil
+		}
+
+		// 探索ディレクトリーを親ディレクトリーへ移動させる
+		parentDir := filepath.Dir(dir)
+		if parentDir == dir {
+			return "", errors.New(".env file was not found")
+		}
+
+		dir = parentDir
+	}
 }

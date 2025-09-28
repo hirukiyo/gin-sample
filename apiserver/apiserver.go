@@ -19,7 +19,7 @@ type App struct {
 }
 
 func StartAPIServer() int {
-	env, err := loadEnvironmentFromDotenv()
+	env, err := LoadAppEnvironment()
 	if err != nil {
 		slog.Error("environment load error.", "err", err)
 		return 1
