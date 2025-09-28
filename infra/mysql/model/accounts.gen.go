@@ -16,6 +16,7 @@ type Account struct {
 	Name      string    `gorm:"column:name;type:varchar(255);not null;comment:名前" json:"name"`                                     // 名前
 	Email     string    `gorm:"column:email;type:varchar(512);not null;comment:メールアドレス" json:"email"`                              // メールアドレス
 	Password  string    `gorm:"column:password;type:varchar(255);not null;comment:パスワード" json:"password"`                          // パスワード
+	Status    int32     `gorm:"column:status;type:int;not null;comment:ステータス(1: 有効 / 他: 無効)" json:"status"`                        // ステータス(1: 有効 / 他: 無効)
 	CreatedAt time.Time `gorm:"column:created_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:作成日時" json:"created_at"` // 作成日時
 	UpdatedAt time.Time `gorm:"column:updated_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新日時" json:"updated_at"` // 更新日時
 }

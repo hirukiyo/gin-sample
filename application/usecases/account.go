@@ -29,6 +29,7 @@ type AccountOutput struct {
 	ID        uint64    `json:"id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
+	Status    int32     `json:"status"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -72,6 +73,7 @@ func (u *accountUsecaseImpl) GetAccount(ctx context.Context, id uint64) (*Accoun
 		ID:        account.ID,
 		Name:      account.Name,
 		Email:     account.Email,
+		Status:    account.Status,
 		CreatedAt: account.CreatedAt,
 		UpdatedAt: account.UpdatedAt,
 	}, nil

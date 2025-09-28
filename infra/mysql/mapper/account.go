@@ -11,6 +11,7 @@ func ToAccountEntity(model *model.Account) *entity.Account {
 		Name:      model.Name,
 		Email:     model.Email,
 		Password:  model.Password,
+		Status:    model.Status,
 		CreatedAt: model.CreatedAt,
 		UpdatedAt: model.UpdatedAt,
 	}
@@ -30,6 +31,7 @@ func ToAccountModel(entity *entity.Account) *model.Account {
 		Name:      entity.Name,
 		Email:     entity.Email,
 		Password:  entity.Password,
+		Status:    entity.Status,
 		CreatedAt: entity.CreatedAt,
 		UpdatedAt: entity.UpdatedAt,
 	}
