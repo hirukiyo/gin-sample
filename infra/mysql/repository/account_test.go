@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"context"
 	"errors"
 	"testing"
 
@@ -26,7 +25,7 @@ func TestAccountGetByID(t *testing.T) {
 		Password: "pass",
 		Status:   1,
 	}
-	if err := gorm.G[model.Account](db).Create(context.Background(), account1); err != nil {
+	if err := gorm.G[model.Account](db).Create(ctx, account1); err != nil {
 		t.Fatal(err)
 	}
 
@@ -277,7 +276,7 @@ func TestAccountUpdate(t *testing.T) {
 		Password: "password",
 		Status:   1,
 	}
-	if err := gorm.G[model.Account](db).Create(context.Background(), account1); err != nil {
+	if err := gorm.G[model.Account](db).Create(ctx, account1); err != nil {
 		t.Fatal(err)
 	}
 
@@ -342,6 +341,63 @@ func TestAccountUpdate(t *testing.T) {
 			}
 			if updated.Status != c.account.Status {
 				t.Errorf("Status is not correct. want: %d, got: %d", c.account.Status, updated.Status)
+			}
+		})
+	}
+}
+
+func TestAccountDelete(t *testing.T) {
+	ctx := t.Context()
+	db, _, _ := testutil.GetTestDB()
+	defer db.Rollback()
+
+	// prepare data
+	account1 := &model.Account{
+		Name:     "test_delete",
+		Email:    "test_delete@example.com",
+		Password: "password",
+		Status:   1,
+	}
+	if err := gorm.G[model.Account](db).Create(ctx, account1); err != nil {
+		t.Fatal(err)
+	}
+
+	repo := NewAccountRepository(db)
+
+	cases := []struct {
+		name string
+		id   uint64
+		rows int
+	}{
+		{
+			name: "OK",
+			id:   account1.ID,
+			rows: 1,
+		},
+		{
+			name: "NG - Not Found",
+			id:   99999, // 存在しないID
+			rows: 0,
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			rows, err := repo.Delete(ctx, c.id)
+			if err != nil {
+				t.Errorf("Delete() error = %v", err)
+				return
+			}
+
+			// check if the record is actually deleted
+			if rows != c.rows {
+				t.Errorf("rows are not correct. want: %d, got: %d", c.rows, rows)
+				return
+			}
+
+			deleted, err := gorm.G[model.Account](db).Where("id = ?", c.id).First(ctx)
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				t.Errorf("レコードが削除されていない、または予期せぬエラーが発生. rec: %v, err: %v", deleted, err)
 			}
 		})
 	}

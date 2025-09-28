@@ -17,5 +17,5 @@ type AccountRepository interface {
 	GetByID(ctx context.Context, id uint64) (*entity.Account, error)
 	Create(ctx context.Context, account *entity.Account) (uint64, error)
 	Update(ctx context.Context, account *entity.Account) (int, error)
-	Delete(ctx context.Context, account *entity.Account) (int, error)
+	Delete(ctx context.Context, id uint64) (int, error)
 }

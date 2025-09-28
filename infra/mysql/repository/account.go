@@ -77,8 +77,8 @@ func (r *AccountRepositoryImpl) Update(ctx context.Context, account *entity.Acco
 	return rows, nil
 }
 
-func (r *AccountRepositoryImpl) Delete(ctx context.Context, account *entity.Account) (int, error) {
-	rows, err := gorm.G[model.Account](r.db).Where("id = ?", account.ID).Delete(ctx)
+func (r *AccountRepositoryImpl) Delete(ctx context.Context, id uint64) (int, error) {
+	rows, err := gorm.G[model.Account](r.db).Where("id = ?", id).Delete(ctx)
 	if err != nil {
 		applog.Info(ctx, "delete error occurred in AccountRepositoryImpl#Delete")
 		return 0, err
