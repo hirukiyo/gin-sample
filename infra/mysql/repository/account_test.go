@@ -5,11 +5,12 @@ import (
 	"errors"
 	"testing"
 
+	"gorm.io/gorm"
+
 	"github.com/hirukiyo/gin-sample/domain"
 	"github.com/hirukiyo/gin-sample/infra/mysql/model"
 	"github.com/hirukiyo/gin-sample/infra/mysql/repository"
 	"github.com/hirukiyo/gin-sample/testutil"
-	"gorm.io/gorm"
 )
 
 func TestAccountGetByID(t *testing.T) {
