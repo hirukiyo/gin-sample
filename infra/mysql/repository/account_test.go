@@ -8,11 +8,68 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/hirukiyo/gin-sample/domain"
+	"github.com/hirukiyo/gin-sample/domain/entity"
 	"github.com/hirukiyo/gin-sample/domain/repository"
 	"github.com/hirukiyo/gin-sample/infra/mysql/model"
 	"github.com/hirukiyo/gin-sample/testutil"
 )
 
+func TestAccountCreate(t *testing.T) {
+	ctx := t.Context()
+	db, _, _ := testutil.GetTestDB()
+	defer db.Rollback()
+
+	repo := NewAccountRepository(db)
+
+	cases := []struct {
+		name    string
+		account *entity.Account
+		wantErr bool
+	}{
+		{
+			name: "OK",
+			account: &entity.Account{
+				Name:     "test_create",
+				Email:    "test_create@example.com",
+				Password: "password",
+				Status:   1,
+			},
+			wantErr: false,
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			id, err := repo.Create(ctx, c.account)
+			if (err != nil) != c.wantErr {
+				t.Errorf("Create() error = %v, wantErr %v", err, c.wantErr)
+				return
+			}
+			if err == nil {
+				if id == 0 {
+					t.Error("id should not be 0")
+				}
+				// check if the record is actually created
+				var created model.Account
+				created, err := gorm.G[model.Account](db).Where("id = ?", id).First(ctx)
+				if err != nil {
+					t.Errorf("failed to find created account: %v", err)
+				}
+				if created.Name != c.account.Name {
+					t.Errorf("Name is not correct. want: %s, got: %s", c.account.Name, created.Name)
+				}
+				if created.Email != c.account.Email {
+					t.Errorf("Email is not correct. want: %s, got: %s", c.account.Email, created.Email)
+				}
+				if created.Status != c.account.Status {
+					t.Errorf("Status is not correct. want: %d, got: %d", c.account.Status, created.Status)
+				}
+			}
+		})
+	}
+}
+
+// @infra/mysql/repostory/account.go @infra/mysql/repository/account_test.go Createメソッドのテストを作成してください
 func TestAccountGetByID(t *testing.T) {
 	ctx := t.Context()
 	db, _, _ := testutil.GetTestDB()
