@@ -57,7 +57,7 @@ func RequestLoggerMiddleware() gin.HandlerFunc {
 // Middleware to log requests
 func RequestLoggingMiddleware(maskKeys []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var requestBody interface{}
+		var requestBody any
 		bodyBytes, _ := io.ReadAll(c.Request.Body)
 		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // Restore the body for the handler
 
@@ -84,10 +84,10 @@ func RequestLoggingMiddleware(maskKeys []string) gin.HandlerFunc {
 	}
 }
 
-func maskAndTruncateJSON(data interface{}, maskKeys []string) interface{} {
+func maskAndTruncateJSON(data any, maskKeys []string) any {
 	switch v := data.(type) {
-	case map[string]interface{}:
-		result := make(map[string]interface{})
+	case map[string]any:
+		result := make(map[string]any)
 		for key, value := range v {
 			if lo.Contains(maskKeys, key) {
 				result[key] = "***MASKED***"
@@ -96,7 +96,7 @@ func maskAndTruncateJSON(data interface{}, maskKeys []string) interface{} {
 			}
 		}
 		return result
-	case []interface{}:
+	case []any:
 		for i, value := range v {
 			v[i] = maskAndTruncateJSON(value, maskKeys)
 		}

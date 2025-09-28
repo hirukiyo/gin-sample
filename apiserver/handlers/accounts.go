@@ -46,7 +46,6 @@ func FindAccounts(db *gorm.DB, uc usecases.AccountUsecase) gin.HandlerFunc {
 
 		accounts, err := gorm.G[model.Account](db).Find(c)
 		if err != nil {
-
 			applog.Error(c, "account fetch error", "err", err)
 			c.JSON(500, gin.H{
 				"message": "Internal Server Error",

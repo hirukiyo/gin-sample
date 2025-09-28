@@ -37,6 +37,14 @@ exec-api:
 exec-mysql:
 	$(DC) exec mysql /bin/bash || true
 
+# Lint
+#
+.PHONY: lint, lint-fix
+lint:
+	docker run --pull always --rm -v $$(pwd):/app:ro -w /app golangci/golangci-lint:v2.5.0-alpine golangci-lint run --timeout=5m
+lint-fix:
+	docker run --pull always --rm -v $$(pwd):/app -w /app golangci/golangci-lint:v2.5.0-alpine golangci-lint run --fix --timeout=5m
+
 # for migrate
 #------------------------------------------------------------------------------
 .PHONY: migrate-create, migrate-up, migrate-down, migrate-drop
