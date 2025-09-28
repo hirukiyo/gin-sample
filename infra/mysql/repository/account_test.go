@@ -1,4 +1,4 @@
-package repository_test
+package repository
 
 import (
 	"context"
@@ -8,9 +8,8 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/hirukiyo/gin-sample/domain"
-	domainrepo "github.com/hirukiyo/gin-sample/domain/repository"
+	"github.com/hirukiyo/gin-sample/domain/repository"
 	"github.com/hirukiyo/gin-sample/infra/mysql/model"
-	"github.com/hirukiyo/gin-sample/infra/mysql/repository"
 	"github.com/hirukiyo/gin-sample/testutil"
 )
 
@@ -52,7 +51,7 @@ func TestAccountGetByID(t *testing.T) {
 	}
 
 	// prepare test target
-	repo := repository.NewAccountRepository(db)
+	repo := NewAccountRepository(db)
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -134,50 +133,50 @@ func TestAccountFind(t *testing.T) {
 	// prepare cases
 	cases := []struct {
 		name  string
-		cond  *domainrepo.AccountFindConditions
+		cond  *repository.AccountFindConditions
 		wants []*model.Account
 		err   error
 	}{
 		{
 			name:  "OK - by Name",
-			cond:  &domainrepo.AccountFindConditions{Name: "account_find_test2"},
+			cond:  &repository.AccountFindConditions{Name: "account_find_test2"},
 			wants: []*model.Account{account2},
 			err:   nil,
 		},
 		{
 			name:  "OK - by Email",
-			cond:  &domainrepo.AccountFindConditions{Email: "account_find_test1@example.jp"},
+			cond:  &repository.AccountFindConditions{Email: "account_find_test1@example.jp"},
 			wants: []*model.Account{account1},
 			err:   nil,
 		},
 		{
 			name:  "OK - by Status",
-			cond:  &domainrepo.AccountFindConditions{Status: 1},
+			cond:  &repository.AccountFindConditions{Status: 1},
 			wants: []*model.Account{account1},
 			err:   nil,
 		},
 		{
 			name:  "OK - by Name and Status",
-			cond:  &domainrepo.AccountFindConditions{Name: "account_find_test1", Status: 2},
+			cond:  &repository.AccountFindConditions{Name: "account_find_test1", Status: 2},
 			wants: []*model.Account{account3},
 			err:   nil,
 		},
 		{
 			name:  "OK - Notfound",
-			cond:  &domainrepo.AccountFindConditions{Name: "not-exist"},
+			cond:  &repository.AccountFindConditions{Name: "not-exist"},
 			wants: []*model.Account{},
 			err:   nil,
 		},
 		{
 			name:  "OK - no condition",
-			cond:  &domainrepo.AccountFindConditions{},
+			cond:  &repository.AccountFindConditions{},
 			wants: []*model.Account{account1, account2, account3},
 			err:   nil,
 		},
 	}
 
 	// prepare test target
-	repo := repository.NewAccountRepository(db)
+	repo := NewAccountRepository(db)
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {

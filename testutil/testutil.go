@@ -3,15 +3,15 @@ package testutil
 import (
 	"gorm.io/gorm"
 
-	"github.com/hirukiyo/gin-sample/apiserver"
+	"github.com/hirukiyo/gin-sample/apiserver/environment"
 	"github.com/hirukiyo/gin-sample/infra/mysql"
 )
 
-func GetTestEnvironment() (*apiserver.AppEnvironment, error) {
-	return apiserver.LoadAppEnvironment()
+func GetTestEnvironment() (*environment.AppEnvironment, error) {
+	return environment.LoadAppEnvironment()
 }
 
-func GetTestDB() (*gorm.DB, *apiserver.AppEnvironment, error) {
+func GetTestDB() (*gorm.DB, *environment.AppEnvironment, error) {
 	env, err := GetTestEnvironment()
 	if err != nil {
 		return nil, nil, err

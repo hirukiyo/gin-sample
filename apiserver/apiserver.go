@@ -8,18 +8,19 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/hirukiyo/gin-sample/apiserver/applog"
+	"github.com/hirukiyo/gin-sample/apiserver/environment"
 	"github.com/hirukiyo/gin-sample/apiserver/middleware"
 	"github.com/hirukiyo/gin-sample/infra/mysql"
 )
 
 type App struct {
-	Env    *AppEnvironment
+	Env    *environment.AppEnvironment
 	Engine *gin.Engine
 	GormDB *gorm.DB
 }
 
 func StartAPIServer() int {
-	env, err := LoadAppEnvironment()
+	env, err := environment.LoadAppEnvironment()
 	if err != nil {
 		slog.Error("environment load error.", "err", err)
 		return 1
