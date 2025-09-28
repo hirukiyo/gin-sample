@@ -14,62 +14,6 @@ import (
 	"github.com/hirukiyo/gin-sample/testutil"
 )
 
-func TestAccountCreate(t *testing.T) {
-	ctx := t.Context()
-	db, _, _ := testutil.GetTestDB()
-	defer db.Rollback()
-
-	repo := NewAccountRepository(db)
-
-	cases := []struct {
-		name    string
-		account *entity.Account
-		wantErr bool
-	}{
-		{
-			name: "OK",
-			account: &entity.Account{
-				Name:     "test_create",
-				Email:    "test_create@example.com",
-				Password: "password",
-				Status:   1,
-			},
-			wantErr: false,
-		},
-	}
-
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			id, err := repo.Create(ctx, c.account)
-			if (err != nil) != c.wantErr {
-				t.Errorf("Create() error = %v, wantErr %v", err, c.wantErr)
-				return
-			}
-			if err == nil {
-				if id == 0 {
-					t.Error("id should not be 0")
-				}
-				// check if the record is actually created
-				var created model.Account
-				created, err := gorm.G[model.Account](db).Where("id = ?", id).First(ctx)
-				if err != nil {
-					t.Errorf("failed to find created account: %v", err)
-				}
-				if created.Name != c.account.Name {
-					t.Errorf("Name is not correct. want: %s, got: %s", c.account.Name, created.Name)
-				}
-				if created.Email != c.account.Email {
-					t.Errorf("Email is not correct. want: %s, got: %s", c.account.Email, created.Email)
-				}
-				if created.Status != c.account.Status {
-					t.Errorf("Status is not correct. want: %d, got: %d", c.account.Status, created.Status)
-				}
-			}
-		})
-	}
-}
-
-// @infra/mysql/repostory/account.go @infra/mysql/repository/account_test.go Createメソッドのテストを作成してください
 func TestAccountGetByID(t *testing.T) {
 	ctx := t.Context()
 	db, _, _ := testutil.GetTestDB()
@@ -261,6 +205,143 @@ func TestAccountFind(t *testing.T) {
 				if want.Status != actual.Status {
 					t.Errorf("invalid Status. case: %d, actual: %d", want.Status, actual.Status)
 				}
+			}
+		})
+	}
+}
+
+func TestAccountCreate(t *testing.T) {
+	ctx := t.Context()
+	db, _, _ := testutil.GetTestDB()
+	defer db.Rollback()
+
+	repo := NewAccountRepository(db)
+
+	cases := []struct {
+		name    string
+		account *entity.Account
+		wantErr bool
+	}{
+		{
+			name: "OK",
+			account: &entity.Account{
+				Name:     "test_create",
+				Email:    "test_create@example.com",
+				Password: "password",
+				Status:   1,
+			},
+			wantErr: false,
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			id, err := repo.Create(ctx, c.account)
+			if (err != nil) != c.wantErr {
+				t.Errorf("Create() error = %v, wantErr %v", err, c.wantErr)
+				return
+			}
+			if err == nil {
+				if id == 0 {
+					t.Error("id should not be 0")
+				}
+				// check if the record is actually created
+				var created model.Account
+				created, err := gorm.G[model.Account](db).Where("id = ?", id).First(ctx)
+				if err != nil {
+					t.Errorf("failed to find created account: %v", err)
+				}
+				if created.Name != c.account.Name {
+					t.Errorf("Name is not correct. want: %s, got: %s", c.account.Name, created.Name)
+				}
+				if created.Email != c.account.Email {
+					t.Errorf("Email is not correct. want: %s, got: %s", c.account.Email, created.Email)
+				}
+				if created.Status != c.account.Status {
+					t.Errorf("Status is not correct. want: %d, got: %d", c.account.Status, created.Status)
+				}
+			}
+		})
+	}
+}
+
+func TestAccountUpdate(t *testing.T) {
+	ctx := t.Context()
+	db, _, _ := testutil.GetTestDB()
+	defer db.Rollback()
+
+	// prepare data
+	account1 := &model.Account{
+		Name:     "test_update_before",
+		Email:    "test_update_before@example.com",
+		Password: "password",
+		Status:   1,
+	}
+	if err := gorm.G[model.Account](db).Create(context.Background(), account1); err != nil {
+		t.Fatal(err)
+	}
+
+	repo := NewAccountRepository(db)
+
+	cases := []struct {
+		name    string
+		account *entity.Account
+		rows    int
+		err     error
+	}{
+		{
+			name: "OK",
+			account: &entity.Account{
+				ID:       account1.ID,
+				Name:     "test_update_after",
+				Email:    "test_update_after@example.com",
+				Password: "new_password",
+				Status:   2,
+			},
+			rows: 1,
+		},
+		{
+			name: "NG - Not Found",
+			account: &entity.Account{
+				ID:   99999, // 存在しないID
+				Name: "test_update_notfound",
+			},
+			rows: 0,
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			rows, err := repo.Update(ctx, c.account)
+			if err != nil {
+				t.Errorf("Update() error = %v", err)
+				return
+			}
+
+			// check if the record is actually updated
+			if rows != c.rows {
+				t.Errorf("rows are not correct. want: %d, got: %d", c.rows, rows)
+				return
+			} else if rows == 0 {
+				return
+			}
+			var updated model.Account
+			updated, err = gorm.G[model.Account](db).Where("id = ?", c.account.ID).First(ctx)
+			if err != nil {
+				t.Errorf("failed to find updated account: %v", err)
+				return
+			}
+			if updated.Name != c.account.Name {
+				t.Errorf("Name is not correct. want: %s, got: %s", c.account.Name, updated.Name)
+			}
+			if updated.Email != c.account.Email {
+				t.Errorf("Email is not correct. want: %s, got: %s", c.account.Email, updated.Email)
+			}
+			if updated.Password != c.account.Password {
+				t.Errorf("Password is not correct. want: %s, got: %s", c.account.Password, updated.Password)
+			}
+			if updated.Status != c.account.Status {
+				t.Errorf("Status is not correct. want: %d, got: %d", c.account.Status, updated.Status)
 			}
 		})
 	}
