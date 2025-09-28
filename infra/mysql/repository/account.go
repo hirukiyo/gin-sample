@@ -22,13 +22,7 @@ func NewAccountRepository(db *gorm.DB) repository.AccountRepository {
 	return &AccountRepositoryImpl{db: db}
 }
 
-type AccountFindConditions struct {
-	Name   string
-	Email  string
-	Status int32
-}
-
-func (r *AccountRepositoryImpl) Find(ctx context.Context, cond *AccountFindConditions) ([]*entity.Account, error) {
+func (r *AccountRepositoryImpl) Find(ctx context.Context, cond *repository.AccountFindConditions) ([]*entity.Account, error) {
 	db := gorm.G[*model.Account](r.db).Where("1 = 1") // convert gorm.Interface type(result of G) to gorm.ChainInterface type(result of Where)
 
 	if cond.Name != "" {
