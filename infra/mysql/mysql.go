@@ -12,27 +12,27 @@ import (
 )
 
 func NewConnection(
-	MysqlUser string,
-	MysqlPassword string,
-	MysqlHost string,
-	MysqlPort int,
-	MysqlDatabase string,
-	MysqlLogLevel int,
-	MysqlMaxIdleConns int,
-	MysqlMaxOpenConns int,
-	MysqlConnectionMaxLifetime int,
+	mysqlUser string,
+	mysqlPassword string,
+	mysqlHost string,
+	mysqlPort int,
+	mysqlDatabase string,
+	mysqlLogLevel int,
+	mysqlMaxIdleConns int,
+	mysqlMaxOpenConns int,
+	mysqlConnectionMaxLifetime int,
 ) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		MysqlUser,
-		MysqlPassword,
-		MysqlHost,
-		MysqlPort,
-		MysqlDatabase,
+		mysqlUser,
+		mysqlPassword,
+		mysqlHost,
+		mysqlPort,
+		mysqlDatabase,
 	)
 
 	db, err := gorm.Open(mysqldriver.Open(dsn), &gorm.Config{
-		Logger: NewLogger(MysqlLogLevel),
+		Logger: NewLogger(mysqlLogLevel),
 	})
 	if err != nil {
 		return nil, err
@@ -41,9 +41,9 @@ func NewConnection(
 	if err != nil {
 		return nil, err
 	}
-	sqlDb.SetMaxIdleConns(MysqlMaxIdleConns)
-	sqlDb.SetMaxOpenConns(MysqlMaxOpenConns)
-	sqlDb.SetConnMaxLifetime(time.Duration(MysqlConnectionMaxLifetime) * time.Second)
+	sqlDb.SetMaxIdleConns(mysqlMaxIdleConns)
+	sqlDb.SetMaxOpenConns(mysqlMaxOpenConns)
+	sqlDb.SetConnMaxLifetime(time.Duration(mysqlConnectionMaxLifetime) * time.Second)
 
 	return db, nil
 }

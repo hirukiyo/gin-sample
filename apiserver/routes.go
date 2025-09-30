@@ -1,6 +1,8 @@
 package apiserver
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/hirukiyo/gin-sample/apiserver/handlers"
@@ -13,7 +15,7 @@ import (
 func RegisterRouteHandler(app *App) {
 	// curl -i http://localhost:8080/ping
 	app.Engine.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})

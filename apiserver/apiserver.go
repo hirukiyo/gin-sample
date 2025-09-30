@@ -34,10 +34,8 @@ func StartAPIServer() int {
 	engine := gin.Default()
 
 	// middleware
-	{
-		engine.Use(gin.Recovery())
-		engine.Use(middleware.RequestLoggingMiddleware(env.LogMaskKeys))
-	}
+	engine.Use(gin.Recovery())
+	engine.Use(middleware.RequestLoggingMiddleware(env.LogMaskKeys))
 
 	// setup
 	gormDB, err := mysql.NewConnection(

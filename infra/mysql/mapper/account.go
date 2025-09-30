@@ -5,15 +5,15 @@ import (
 	"github.com/hirukiyo/gin-sample/infra/mysql/model"
 )
 
-func ToAccountEntity(model *model.Account) *entity.Account {
+func ToAccountEntity(m *model.Account) *entity.Account {
 	return &entity.Account{
-		ID:        model.ID,
-		Name:      model.Name,
-		Email:     model.Email,
-		Password:  model.Password,
-		Status:    model.Status,
-		CreatedAt: model.CreatedAt,
-		UpdatedAt: model.UpdatedAt,
+		ID:        m.ID,
+		Name:      m.Name,
+		Email:     m.Email,
+		Password:  m.Password,
+		Status:    m.Status,
+		CreatedAt: m.CreatedAt,
+		UpdatedAt: m.UpdatedAt,
 	}
 }
 
@@ -25,15 +25,15 @@ func ToAccountEntities(models []*model.Account) []*entity.Account {
 	return accountEntities
 }
 
-func ToAccountModel(entity *entity.Account) *model.Account {
+func ToAccountModel(e *entity.Account) *model.Account {
 	return &model.Account{
-		ID:        entity.ID,
-		Name:      entity.Name,
-		Email:     entity.Email,
-		Password:  entity.Password,
-		Status:    entity.Status,
-		CreatedAt: entity.CreatedAt,
-		UpdatedAt: entity.UpdatedAt,
+		ID:        e.ID,
+		Name:      e.Name,
+		Email:     e.Email,
+		Password:  e.Password,
+		Status:    e.Status,
+		CreatedAt: e.CreatedAt,
+		UpdatedAt: e.UpdatedAt,
 	}
 }
 

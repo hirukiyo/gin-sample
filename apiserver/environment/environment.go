@@ -37,7 +37,7 @@ func LoadAppEnvironment() (*AppEnvironment, error) {
 	return loadEnvironmentFromDotenv()
 }
 
-func (e *AppEnvironment) ginMode(m string) string {
+func (*AppEnvironment) ginMode(m string) string {
 	// 値補正
 	if m != gin.DebugMode && m != gin.ReleaseMode {
 		m = gin.DebugMode

@@ -16,6 +16,8 @@ import (
 	"github.com/samber/lo"
 )
 
+const maxLogValueLength = 256
+
 func RequestLoggerMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := xid.New().String()
@@ -102,8 +104,8 @@ func maskAndTruncateJSON(data any, maskKeys []string) any {
 		}
 		return v
 	case string:
-		if len(v) > 256 {
-			return v[:256]
+		if len(v) > maxLogValueLength {
+			return v[:maxLogValueLength]
 		}
 		return v
 	default:
