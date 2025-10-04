@@ -32,6 +32,8 @@ func StartAPIServer() int {
 	})
 	gin.SetMode(env.AppMode)
 	engine := gin.Default()
+	// see: https://gin-gonic.com/ja/docs/deployment/#全てのプロキシを信頼しない
+	engine.SetTrustedProxies(nil)
 
 	// middleware
 	engine.Use(gin.Recovery())
